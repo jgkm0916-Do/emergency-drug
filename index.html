@@ -224,7 +224,7 @@
       line-height: 1.5;
     }
 
-    footer {
+    .footer {
       text-align: center;
       color: #64748b;
       font-size: 13px;
@@ -255,6 +255,29 @@
 .top-nav button:hover {
   background: #cbd5e1;
 }
+
+.drug-code {
+  display: inline-block;
+  background: #991b1b;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 8px 0 12px;
+}
+
+.drug-img {
+  width: 100%;
+  max-width: 180px;
+  display: block;
+  margin: 10px auto 16px;
+  object-fit: contain;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+}
+    
   </style>
 </head>
 <body>
@@ -325,26 +348,111 @@
   <h2>📚 응급약물 학습하기</h2>
 
   <div class="drug-card">
-    <h3>Norepinephrine</h3>
-    <p><strong>사용 상황:</strong> Septic shock, severe hypotension</p>
-    <p><strong>기대 변화:</strong> 혈관수축 → BP 상승 → MAP 유지</p>
-    <p><strong>주의:</strong> 말초혈관 수축, infiltration 주의</p>
-  </div>
+  <h3>Epinephrine</h3>
+
+  <p class="drug-code">병원코드: MEPI</p>
+
+  <img src="images/MEPI.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> cardiac arrest, CPR, pulseless VT/VF</p>
+  <p><strong>기대 변화:</strong> 심근 수축력 증가, 혈관수축, 관상동맥 관류압 증가</p>
+  <p><strong>간호 포인트:</strong> CPR 중 투여 시점, route, flush 확인</p>
+  <p><strong>주의:</strong> ROSC 후 빈맥, 혈압 상승, 부정맥 가능성</p>
+</div>
 
   <div class="drug-card">
-    <h3>Calcium Gluconate</h3>
-    <p><strong>사용 상황:</strong> Hyperkalemia + ECG 변화</p>
-    <p><strong>기대 변화:</strong> 심근 안정화</p>
-    <p><strong>핵심:</strong> 칼륨 제거 약물이 아님</p>
-  </div>
+  <h3>Adenosine</h3>
+
+  <p class="drug-code">병원코드: MADEN</p>
+
+  <img src="images/MADEN.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> stable SVT</p>
+  <p><strong>기대 변화:</strong> AV node 순간 차단 → 리듬 전환</p>
+  <p><strong>간호 포인트:</strong> 빠른 IV push + flush</p>
+  <p><strong>주의:</strong> 일시적 무수축처럼 보일 수 있음</p>
+</div>
 
   <div class="drug-card">
-    <h3>Adenosine</h3>
-    <p><strong>사용 상황:</strong> SVT</p>
-    <p><strong>기대 변화:</strong> 순간적인 AV node 차단</p>
-    <p><strong>주의:</strong> 빠른 IV push 필요</p>
-  </div>
+  <h3>Amiodarone</h3>
 
+  <p class="drug-code">병원코드: MCDR</p>
+
+  <img src="images/MCDR.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> VT/VF</p>
+  <p><strong>기대 변화:</strong> 심실성 부정맥 억제</p>
+  <p><strong>간호 포인트:</strong> ECG/BP monitoring</p>
+  <p><strong>주의:</strong> QT prolongation, hypotension</p>
+</div>
+
+ <div class="drug-card">
+  <h3>Calcium Gluconate</h3>
+
+  <p class="drug-code">병원코드: MCAGLU</p>
+
+  <img src="images/MCAGLU.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> hyperkalemia + ECG 변화</p>
+  <p><strong>기대 변화:</strong> 심근 안정화</p>
+  <p><strong>핵심:</strong> 칼륨 제거 약물이 아님</p>
+  <p><strong>주의:</strong> ECG 변화 지속 관찰</p>
+</div>   
+
+<div class="drug-card">
+  <h3>Sodium Bicarbonate</h3>
+
+  <p class="drug-code">병원코드: MBIVON</p>
+
+  <img src="images/MBIVON.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> severe acidosis, hyperkalemia</p>
+  <p><strong>기대 변화:</strong> 산증 완화, 칼륨 세포 내 이동</p>
+  <p><strong>간호 포인트:</strong> ABGA, Na, K monitoring</p>
+  <p><strong>주의:</strong> indiscriminate use 주의</p>
+</div>
+
+  <div class="drug-card">
+  <h3>Dopamine</h3>
+
+  <p class="drug-code">병원코드: MDOPA</p>
+
+  <img src="images/MDOPA.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> hypotension, bradycardia</p>
+  <p><strong>기대 변화:</strong> HR/BP 상승</p>
+  <p><strong>간호 포인트:</strong> infusion rate 확인</p>
+  <p><strong>주의:</strong> tachycardia, arrhythmia</p>
+</div>
+
+  <div class="drug-card">
+  <h3>Norepinephrine</h3>
+
+  <p class="drug-code">병원코드: MLEVO</p>
+
+  <img src="images/MLEVO.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> septic shock</p>
+  <p><strong>기대 변화:</strong> 강한 혈관수축 → MAP 상승</p>
+  <p><strong>간호 포인트:</strong> MAP/BP monitoring</p>
+  <p><strong>주의:</strong> infiltration, peripheral ischemia</p>
+</div>
+
+    <div class="drug-card">
+  <h3>Dopamine Premix</h3>
+
+  <p class="drug-code">병원코드: M8DOPAM / M16DOPAM</p>
+
+  <img src="images/M8DOPAM.jpg" class="drug-img">
+
+  <img src="images/M16DOPAM.jpg" class="drug-img">
+
+  <p><strong>주요 상황:</strong> severe hypotension, shock</p>
+  <p><strong>기대 변화:</strong> BP 상승, perfusion 개선</p>
+  <p><strong>간호 포인트:</strong> infusion pump 사용</p>
+  <p><strong>주의:</strong> 용량별 농도 차이 확인</p>
+</div>
+    
 </section>
 
   <section id="drugCards" class="card hidden">
