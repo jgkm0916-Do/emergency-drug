@@ -200,29 +200,97 @@
     }
 
     .drug-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 12px;
-    }
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 22px;
+}
 
-    .drug-card {
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 14px;
-      border-left: 5px solid #991b1b;
-    }
+.drug-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  border-left: 5px solid #b91c1c;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  min-height: 520px;
+}
 
-    .drug-card h3 {
-      margin: 0 0 8px;
-      font-size: 17px;
-    }
+.drug-card h3 {
+  margin: 0 0 10px;
+  font-size: 19px;
+  text-align: center;
+  color: #020617;
+}
 
-    .drug-card p {
-      margin: 4px 0;
-      font-size: 14px;
-      color: #475569;
-      line-height: 1.5;
-    }
+.drug-code {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 12px;
+  background: #b91c1c;
+  color: #ffffff !important;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.drug-img {
+  width: 100%;
+  max-width: 150px;
+  height: 170px;
+  display: block;
+  margin: 8px auto 16px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.drug-info {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.drug-info p {
+  margin: 0;
+}
+
+.info-label {
+  display: inline-block;
+  font-weight: 800;
+  color: #111827;
+  margin-right: 4px;
+}
+
+.study-note {
+  background: #eff6ff;
+  color: #1e3a8a;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+@media (max-width: 1100px) {
+  .drug-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .drug-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .drug-card {
+    min-height: auto;
+  }
+}
 
     .footer {
       text-align: center;
@@ -343,116 +411,120 @@
     <button class="secondary-btn" onclick="showDrugCards()">응급약물 카드 보기</button>
   </section>
 
-  <section id="studyScreen" class="card hidden">
+ <section id="studyScreen" class="card hidden">
 
   <h2>📚 응급약물 학습하기</h2>
+  <p class="case-text">
+    응급약물은 이름을 외우는 것보다, <strong>어떤 상황에서 왜 사용하는지</strong> 이해하는 것이 중요합니다.
+  </p>
 
-  <div class="drug-card">
-  <h3>Epinephrine</h3>
-
-  <p class="drug-code">병원코드: MEPI</p>
-
-  <img src="images/MEPI.jpg" class="drug-img">
-
-  <p><strong>주요 상황:</strong> cardiac arrest, CPR, pulseless VT/VF</p>
-  <p><strong>기대 변화:</strong> 심근 수축력 증가, 혈관수축, 관상동맥 관류압 증가</p>
-  <p><strong>간호 포인트:</strong> CPR 중 투여 시점, route, flush 확인</p>
-  <p><strong>주의:</strong> ROSC 후 빈맥, 혈압 상승, 부정맥 가능성</p>
-</div>
-
-  <div class="drug-card">
-  <h3>Adenosine</h3>
-
-  <p class="drug-code">병원코드: MADEN</p>
-
-  <img src="images/MADEN.jpg" class="drug-img">
-
-  <p><strong>주요 상황:</strong> stable SVT</p>
-  <p><strong>기대 변화:</strong> AV node 순간 차단 → 리듬 전환</p>
-  <p><strong>간호 포인트:</strong> 빠른 IV push + flush</p>
-  <p><strong>주의:</strong> 일시적 무수축처럼 보일 수 있음</p>
-</div>
-
-  <div class="drug-card">
-  <h3>Amiodarone</h3>
-
-  <p class="drug-code">병원코드: MCDR</p>
-
-  <img src="images/MCDR.jpg" class="drug-img">
-
-  <p><strong>주요 상황:</strong> VT/VF</p>
-  <p><strong>기대 변화:</strong> 심실성 부정맥 억제</p>
-  <p><strong>간호 포인트:</strong> ECG/BP monitoring</p>
-  <p><strong>주의:</strong> QT prolongation, hypotension</p>
-</div>
-
- <div class="drug-card">
-  <h3>Calcium Gluconate</h3>
-
-  <p class="drug-code">병원코드: MCAGLU</p>
-
-  <img src="images/MCAGLU.jpg" class="drug-img">
-
-  <p><strong>주요 상황:</strong> hyperkalemia + ECG 변화</p>
-  <p><strong>기대 변화:</strong> 심근 안정화</p>
-  <p><strong>핵심:</strong> 칼륨 제거 약물이 아님</p>
-  <p><strong>주의:</strong> ECG 변화 지속 관찰</p>
-</div>   
-
-<div class="drug-card">
-  <h3>Sodium Bicarbonate</h3>
-
-  <p class="drug-code">병원코드: MBIVON</p>
-
-  <img src="images/MBIVON.jpg" class="drug-img">
-
-  <p><strong>주요 상황:</strong> severe acidosis, hyperkalemia</p>
-  <p><strong>기대 변화:</strong> 산증 완화, 칼륨 세포 내 이동</p>
-  <p><strong>간호 포인트:</strong> ABGA, Na, K monitoring</p>
-  <p><strong>주의:</strong> indiscriminate use 주의</p>
-</div>
-
-  <div class="drug-card">
-  <h3>Dopamine</h3>
-
-  <p class="drug-code">병원코드: MDOPA</p>
-
-  <img src="images/MDOPA.jpg" class="drug-img">
-
-  <p><strong>주요 상황:</strong> hypotension, bradycardia</p>
-  <p><strong>기대 변화:</strong> HR/BP 상승</p>
-  <p><strong>간호 포인트:</strong> infusion rate 확인</p>
-  <p><strong>주의:</strong> tachycardia, arrhythmia</p>
-</div>
-
-  <div class="drug-card">
-  <h3>Norepinephrine</h3>
-
-  <p class="drug-code">병원코드: MLEVO</p>
-
-  <img src="images/MLEVO.jpg" class="drug-img">
-
-  <p><strong>주요 상황:</strong> septic shock</p>
-  <p><strong>기대 변화:</strong> 강한 혈관수축 → MAP 상승</p>
-  <p><strong>간호 포인트:</strong> MAP/BP monitoring</p>
-  <p><strong>주의:</strong> infiltration, peripheral ischemia</p>
-</div>
+  <div class="drug-grid">
 
     <div class="drug-card">
-  <h3>Dopamine Premix</h3>
+      <h3>Epinephrine</h3>
+      <p class="drug-code">병원코드: MEPI</p>
+      <img src="images/MEPI.jpg" class="drug-img" alt="Epinephrine">
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> cardiac arrest, CPR, pulseless VT/VF</p>
+        <p><span class="info-label">기대 변화</span> 심근 수축력 증가, 혈관수축, 관상동맥 관류압 증가</p>
+        <p><span class="info-label">간호 포인트</span> CPR 중 투여 시점, route, flush 확인</p>
+        <p><span class="info-label">주의</span> ROSC 후 빈맥, 혈압 상승, 부정맥 가능성</p>
+      </div>
+    </div>
 
-  <p class="drug-code">병원코드: M8DOPAM / M16DOPAM</p>
+    <div class="drug-card">
+      <h3>Adenosine</h3>
+      <p class="drug-code">병원코드: MADEN</p>
+      <img src="images/MADEN.jpg" class="drug-img" alt="Adenosine">
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> stable SVT</p>
+        <p><span class="info-label">기대 변화</span> AV node 순간 차단 → 리듬 전환</p>
+        <p><span class="info-label">간호 포인트</span> 빠른 IV push + flush, ECG monitoring</p>
+        <p><span class="info-label">주의</span> 일시적 무수축처럼 보일 수 있음</p>
+      </div>
+    </div>
 
-  <img src="images/M8DOPAM.jpg" class="drug-img">
+    <div class="drug-card">
+      <h3>Amiodarone</h3>
+      <p class="drug-code">병원코드: MCDR</p>
+      <img src="images/MCDR.jpg" class="drug-img" alt="Amiodarone">
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> VT/VF, recurrent ventricular arrhythmia</p>
+        <p><span class="info-label">기대 변화</span> 심실성 부정맥 억제, 리듬 안정화</p>
+        <p><span class="info-label">간호 포인트</span> ECG, BP, 투여 속도 확인</p>
+        <p><span class="info-label">주의</span> QT prolongation, hypotension, bradycardia</p>
+      </div>
+    </div>
 
-  <img src="images/M16DOPAM.jpg" class="drug-img">
+    <div class="drug-card">
+      <h3>Calcium Gluconate</h3>
+      <p class="drug-code">병원코드: MCAGLU</p>
+      <img src="images/MCAGLU.jpg" class="drug-img" alt="Calcium Gluconate">
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> hyperkalemia + ECG 변화</p>
+        <p><span class="info-label">기대 변화</span> 심근세포막 안정화</p>
+        <p><span class="info-label">핵심</span> 칼륨 제거 약물이 아님</p>
+        <p><span class="info-label">주의</span> ECG 변화 지속 관찰</p>
+      </div>
+    </div>
 
-  <p><strong>주요 상황:</strong> severe hypotension, shock</p>
-  <p><strong>기대 변화:</strong> BP 상승, perfusion 개선</p>
-  <p><strong>간호 포인트:</strong> infusion pump 사용</p>
-  <p><strong>주의:</strong> 용량별 농도 차이 확인</p>
-</div>
-    
+    <div class="drug-card">
+      <h3>Sodium Bicarbonate</h3>
+      <p class="drug-code">병원코드: MBIVON</p>
+      <img src="images/MBIVON.jpg" class="drug-img" alt="Sodium Bicarbonate">
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> severe acidosis, hyperkalemia with acidosis</p>
+        <p><span class="info-label">기대 변화</span> 산증 완화, 칼륨 세포 내 이동 보조</p>
+        <p><span class="info-label">간호 포인트</span> ABGA, Na, K monitoring</p>
+        <p><span class="info-label">주의</span> 무조건적 사용보다 산증 동반 여부 확인</p>
+      </div>
+    </div>
+
+    <div class="drug-card">
+      <h3>Dopamine</h3>
+      <p class="drug-code">병원코드: MDOPA</p>
+      <img src="images/MDOPA.jpg" class="drug-img" alt="Dopamine">
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> hypotension, symptomatic bradycardia</p>
+        <p><span class="info-label">기대 변화</span> HR/BP 상승, 말초관류 개선</p>
+        <p><span class="info-label">간호 포인트</span> BP, HR, infusion rate 확인</p>
+        <p><span class="info-label">주의</span> tachycardia, arrhythmia</p>
+      </div>
+    </div>
+
+    <div class="drug-card">
+      <h3>Norepinephrine</h3>
+      <p class="drug-code">병원코드: MLEVO</p>
+      <img src="images/MLEVO.jpg" class="drug-img" alt="Norepinephrine">
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> septic shock, severe hypotension</p>
+        <p><span class="info-label">기대 변화</span> 강한 혈관수축 → MAP 상승</p>
+        <p><span class="info-label">간호 포인트</span> MAP/BP, 말초순환, 정맥로 확인</p>
+        <p><span class="info-label">주의</span> infiltration, peripheral ischemia</p>
+      </div>
+    </div>
+
+    <div class="drug-card">
+      <h3>Dopamine Premix</h3>
+      <p class="drug-code">병원코드: M8DOPAM / M16DOPAM</p>
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <img src="images/M8DOPAM.jpg" class="drug-img" alt="Dopamine Premix 800mg">
+        <img src="images/M16DOPAM.jpg" class="drug-img" alt="Dopamine Premix 1600mg">
+      </div>
+      <div class="drug-info">
+        <p><span class="info-label">주요 상황</span> severe hypotension, shock</p>
+        <p><span class="info-label">기대 변화</span> BP 상승, perfusion 개선</p>
+        <p><span class="info-label">간호 포인트</span> infusion pump 사용, 농도 확인</p>
+        <p><span class="info-label">주의</span> 800mg / 1600mg 용량 구분</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="study-note">
+    ℹ️ 주의: 모든 약물 투여 시 반드시 병원 프로토콜과 의사 처방을 확인하고, 환자 상태를 지속적으로 모니터링하세요.
+  </div>
+
 </section>
 
   <section id="drugCards" class="card hidden">
