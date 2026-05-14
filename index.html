@@ -230,6 +230,31 @@
       font-size: 13px;
       padding: 20px;
     }
+
+    .top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-nav button {
+  background: #e2e8f0;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.top-nav button:hover {
+  background: #cbd5e1;
+}
   </style>
 </head>
 <body>
@@ -238,7 +263,14 @@
   <h1>🚨 응급약물 Survival Game</h1>
   <p>병동에서 자주 만나는 응급상황, 어떤 약물을 선택하시겠습니까?</p>
 </header>
-
+  
+<nav class="top-nav">
+  <button onclick="showTab('home')">🏠 홈</button>
+  <button onclick="showTab('study')">📚 학습하기</button>
+  <button onclick="showTab('quiz')">🎮 퀴즈</button>
+  <button onclick="showTab('drug')">💉 약물카드</button>
+</nav>
+  
 <div class="container">
 
   <section id="startScreen" class="card">
@@ -284,6 +316,33 @@
     <button class="primary-btn" onclick="restartGame()">다시 도전하기</button>
     <button class="secondary-btn" onclick="showDrugCards()">응급약물 카드 보기</button>
   </section>
+
+  <section id="studyScreen" class="card hidden">
+
+  <h2>📚 응급약물 학습하기</h2>
+
+  <div class="drug-card">
+    <h3>Norepinephrine</h3>
+    <p><strong>사용 상황:</strong> Septic shock, severe hypotension</p>
+    <p><strong>기대 변화:</strong> 혈관수축 → BP 상승 → MAP 유지</p>
+    <p><strong>주의:</strong> 말초혈관 수축, infiltration 주의</p>
+  </div>
+
+  <div class="drug-card">
+    <h3>Calcium Gluconate</h3>
+    <p><strong>사용 상황:</strong> Hyperkalemia + ECG 변화</p>
+    <p><strong>기대 변화:</strong> 심근 안정화</p>
+    <p><strong>핵심:</strong> 칼륨 제거 약물이 아님</p>
+  </div>
+
+  <div class="drug-card">
+    <h3>Adenosine</h3>
+    <p><strong>사용 상황:</strong> SVT</p>
+    <p><strong>기대 변화:</strong> 순간적인 AV node 차단</p>
+    <p><strong>주의:</strong> 빠른 IV push 필요</p>
+  </div>
+
+</section>
 
   <section id="drugCards" class="card hidden">
     <h2>💉 응급약물 핵심 카드</h2>
@@ -453,6 +512,7 @@
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("finishScreen").classList.add("hidden");
     document.getElementById("drugCards").classList.add("hidden");
+    document.getElementById("studyScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
     currentIndex = 0;
     score = 0;
@@ -553,6 +613,32 @@
       behavior: "smooth"
     });
   }
+
+  function showTab(tab) {
+
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.add("hidden");
+  document.getElementById("drugCards").classList.add("hidden");
+
+  if(tab === "home") {
+    document.getElementById("startScreen").classList.remove("hidden");
+  }
+
+  if(tab === "quiz") {
+  startGame();
+}
+
+  if(tab === "drug") {
+    document.getElementById("drugCards").classList.remove("hidden");
+  }
+
+   if(tab === "study") {
+   document.getElementById("studyScreen").classList.remove("hidden");
+  }
+
+
+}
 </script>
 
 </body>
