@@ -610,19 +610,16 @@
   }
 
   function showDrugCards() {
-    document.getElementById("drugCards").classList.remove("hidden");
-    window.scrollTo({
-      top: document.getElementById("drugCards").offsetTop,
-      behavior: "smooth"
-    });
-  }
-
+  showTab("drug");
+}
+  
   function showTab(tab) {
 
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("finishScreen").classList.add("hidden");
   document.getElementById("drugCards").classList.add("hidden");
+  document.getElementById("studyScreen").classList.add("hidden");
 
   if(tab === "home") {
     document.getElementById("startScreen").classList.remove("hidden");
