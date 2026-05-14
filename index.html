@@ -90,7 +90,7 @@
   animation: moveEcg 5s linear infinite;
 }
 
-.ecg polyline {
+.ecg path {
   fill: none;
   stroke: #22c55e;
   stroke-width: 3;
@@ -452,7 +452,7 @@
       </div>
       <div class="ecg">
   <svg viewBox="0 0 1200 80" preserveAspectRatio="none">
-    <polyline id="ecgLine" points=""></polyline>
+    <path id="ecgLine" d=""></path>
   </svg>
 </div>
     </div>
@@ -766,7 +766,7 @@
     bp: "88/50",
     spo2: "94%",
 
-    ecg: "0,40 80,40 95,15 110,70 125,40 250,40 265,15 280,70 295,40 420,40 435,15 450,70 465,40 590,40",
+    ecg: "M0 50 C30 50, 60 50, 90 50 C105 50, 110 15, 120 10 C130 40, 135 70, 150 50 C190 50, 230 50, 270 50 C285 50, 290 15, 300 10 C310 40, 315 70, 330 50 C370 50, 410 50, 450 50 C465 50, 470 15, 480 10 C490 40, 495 70, 510 50 C550 50, 590 50, 630 50 C645 50, 650 15, 660 10 C670 40, 675 70, 690 50 C730 50, 770 50, 810 50 C825 50, 830 15, 840 10 C850 40, 855 70, 870 50 C910 50, 950 50, 990 50 C1005 50, 1010 15, 1020 10 C1030 40, 1035 70, 1050 50 C1090 50, 1140 50, 1200 50",
 
     steps: [
 
@@ -860,7 +860,7 @@ function loadQuestion() {
   document.getElementById("hr").innerText = scenario.hr;
   document.getElementById("bp").innerText = scenario.bp;
   document.getElementById("spo2").innerText = scenario.spo2;
-  document.getElementById("ecgLine").setAttribute("points", scenario.ecg);
+  document.getElementById("ecgLine").setAttribute("d", scenario.ecg);
   document.getElementById("questionText").innerText = step.question;
 
   const optionsBox = document.getElementById("optionsBox");
