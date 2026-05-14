@@ -827,83 +827,106 @@
   }
 
 ];
-  let currentIndex = 0;
+  let currentScenarioIndex = 0;
+  let currentStepIndex = 0;
   let score = 0;
   let answered = false;
 
   function startGame() {
-    document.getElementById("startScreen").classList.add("hidden");
-    document.getElementById("finishScreen").classList.add("hidden");
-    document.getElementById("drugCards").classList.add("hidden");
-    document.getElementById("studyScreen").classList.add("hidden");
-    document.getElementById("gameScreen").classList.remove("hidden");
-    currentIndex = 0;
-    score = 0;
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.add("hidden");
+  document.getElementById("drugCards").classList.add("hidden");
+  document.getElementById("studyScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+
+  currentScenarioIndex = 0;
+  currentStepIndex = 0;
+  score = 0;
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered = false;
+
+  const scenario = scenarios[currentScenarioIndex];
+  const step = scenario.steps[currentStepIndex];
+
+  document.getElementById("progressText").innerText =
+    `CASE ${currentScenarioIndex + 1} / ${scenarios.length} · STEP ${currentStepIndex + 1} / ${scenario.steps.length}`;
+
+  document.getElementById("caseTitle").innerText = scenario.title;
+  document.getElementById("caseText").innerText = scenario.text;
+  document.getElementById("hr").innerText = scenario.hr;
+  document.getElementById("bp").innerText = scenario.bp;
+  document.getElementById("spo2").innerText = scenario.spo2;
+  document.getElementById("ecgLine").setAttribute("points", scenario.ecg);
+  document.getElementById("questionText").innerText = step.question;
+
+  const optionsBox = document.getElementById("optionsBox");
+  optionsBox.innerHTML = "";
+
+  step.options.forEach(option => {
+    const btn = document.createElement("button");
+    btn.className = "option-btn";
+    btn.innerText = option;
+    btn.onclick = () => checkAnswer(option);
+    optionsBox.appendChild(btn);
+  });
+
+  const resultBox = document.getElementById("resultBox");
+  resultBox.style.display = "none";
+  resultBox.className = "result";
+
+  const nextBtn = document.getElementById("nextBtn");
+  nextBtn.classList.add("hidden");
+
+  if (currentStepIndex < scenario.steps.length - 1) {
+    nextBtn.innerText = "다음 STEP";
+  } else {
+    nextBtn.innerText = "다음 CASE";
+  }
+}
+
+function checkAnswer(selected) {
+  if (answered) return;
+  answered = true;
+
+  const scenario = scenarios[currentScenarioIndex];
+  const step = scenario.steps[currentStepIndex];
+  const resultBox = document.getElementById("resultBox");
+
+  if (selected === step.answer) {
+    score++;
+    resultBox.className = "result correct";
+    resultBox.innerHTML = `✅ <strong>정답!</strong><br>${step.correct}`;
+  } else {
+    resultBox.className = "result wrong";
+    resultBox.innerHTML = `🚨 <strong>다시 확인!</strong><br>${step.wrong}<br><br>정답: <strong>${step.answer}</strong>`;
+  }
+
+  resultBox.style.display = "block";
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextQuestion() {
+  const scenario = scenarios[currentScenarioIndex];
+
+  if (currentStepIndex < scenario.steps.length - 1) {
+    currentStepIndex++;
     loadQuestion();
+    return;
   }
 
-  function loadQuestion() {
-    answered = false;
-    const q = questions[currentIndex];
+  currentScenarioIndex++;
+  currentStepIndex = 0;
 
-    document.getElementById("progressText").innerText =
-      `문제 ${currentIndex + 1} / ${questions.length}`;
-
-    document.getElementById("caseTitle").innerText = q.title;
-    document.getElementById("caseText").innerText = q.text;
-    document.getElementById("hr").innerText = q.hr;
-    document.getElementById("bp").innerText = q.bp;
-    document.getElementById("spo2").innerText = q.spo2;
-    document.getElementById("ecgLine").setAttribute("points", q.ecg);
-    document.getElementById("questionText").innerText = q.question;
-
-    const optionsBox = document.getElementById("optionsBox");
-    optionsBox.innerHTML = "";
-
-    q.options.forEach(option => {
-      const btn = document.createElement("button");
-      btn.className = "option-btn";
-      btn.innerText = option;
-      btn.onclick = () => checkAnswer(option);
-      optionsBox.appendChild(btn);
-    });
-
-    const resultBox = document.getElementById("resultBox");
-    resultBox.style.display = "none";
-    resultBox.className = "result";
-
-    document.getElementById("nextBtn").classList.add("hidden");
+  if (currentScenarioIndex < scenarios.length) {
+    loadQuestion();
+  } else {
+    finishGame();
   }
-
-  function checkAnswer(selected) {
-    if (answered) return;
-    answered = true;
-
-    const q = questions[currentIndex];
-    const resultBox = document.getElementById("resultBox");
-
-    if (selected === q.answer) {
-      score++;
-      resultBox.className = "result correct";
-      resultBox.innerHTML = `✅ <strong>정답!</strong><br>${q.correct}`;
-    } else {
-      resultBox.className = "result wrong";
-      resultBox.innerHTML = `🚨 <strong>상태 악화!</strong><br>${q.wrong}<br><br>정답: <strong>${q.answer}</strong>`;
-    }
-
-    resultBox.style.display = "block";
-    document.getElementById("nextBtn").classList.remove("hidden");
-  }
-
-  function nextQuestion() {
-    currentIndex++;
-
-    if (currentIndex < questions.length) {
-      loadQuestion();
-    } else {
-      finishGame();
-    }
-  }
+}
 
   function finishGame() {
     document.getElementById("gameScreen").classList.add("hidden");
