@@ -1,1 +1,543 @@
-# emergency-drug
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>응급약물 Survival Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      background: #eef2f7;
+      color: #111827;
+    }
+
+    header {
+      background: linear-gradient(135deg, #991b1b, #1e293b);
+      color: white;
+      padding: 24px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+    }
+
+    .monitor {
+      background: #020617;
+      color: #22c55e;
+      border-radius: 18px;
+      padding: 22px;
+      margin: 16px 0;
+      font-family: monospace;
+      box-shadow: inset 0 0 18px rgba(34,197,94,0.25);
+    }
+
+    .monitor-top {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .vital {
+      border: 1px solid rgba(34,197,94,0.35);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .vital strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 4px;
+    }
+
+    .ecg {
+      height: 70px;
+      overflow: hidden;
+      border-top: 1px solid rgba(34,197,94,0.25);
+      border-bottom: 1px solid rgba(34,197,94,0.25);
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      font-size: 28px;
+      letter-spacing: 2px;
+      animation: moveEcg 6s linear infinite;
+    }
+
+    @keyframes moveEcg {
+      from { transform: translateX(0); }
+      to { transform: translateX(-120px); }
+    }
+
+    .case-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .case-text {
+      line-height: 1.6;
+      color: #374151;
+      font-size: 16px;
+    }
+
+    .question {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 22px 0 14px;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .option-btn {
+      background: #f1f5f9;
+      color: #111827;
+      text-align: left;
+    }
+
+    .option-btn:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
+    }
+
+    .primary-btn {
+      background: #991b1b;
+      color: white;
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .secondary-btn {
+      background: #1e293b;
+      color: white;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .result {
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 18px;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .correct {
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #166534;
+    }
+
+    .wrong {
+      background: #fee2e2;
+      border: 2px solid #ef4444;
+      color: #991b1b;
+    }
+
+    .progress {
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 12px;
+    }
+
+    .score {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .drug-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .drug-card {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px;
+      border-left: 5px solid #991b1b;
+    }
+
+    .drug-card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .drug-card p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 13px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🚨 응급약물 Survival Game</h1>
+  <p>병동에서 자주 만나는 응급상황, 어떤 약물을 선택하시겠습니까?</p>
+</header>
+
+<div class="container">
+
+  <section id="startScreen" class="card">
+    <h2>CODE BLUE DRUG MISSION</h2>
+    <p class="case-text">
+      이 학습은 응급약물을 단순 암기하는 것이 아니라,  
+      실제 상황에서 <strong>어떤 약을 왜 선택해야 하는지</strong> 판단하는 훈련입니다.
+    </p>
+    <button class="primary-btn" onclick="startGame()">START</button>
+  </section>
+
+  <section id="gameScreen" class="card hidden">
+    <div class="progress" id="progressText"></div>
+
+    <div class="case-title" id="caseTitle"></div>
+    <div class="case-text" id="caseText"></div>
+
+    <div class="monitor">
+      <div class="monitor-top">
+        <div class="vital">HR<strong id="hr"></strong></div>
+        <div class="vital">BP<strong id="bp"></strong></div>
+        <div class="vital">SpO₂<strong id="spo2"></strong></div>
+      </div>
+      <div class="ecg" id="ecgText"></div>
+    </div>
+
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionsBox"></div>
+
+    <div id="resultBox" class="result"></div>
+
+    <button id="nextBtn" class="primary-btn hidden" onclick="nextQuestion()">다음 문제</button>
+  </section>
+
+  <section id="finishScreen" class="card hidden">
+    <h2>🎉 학습 완료</h2>
+    <p class="score" id="finalScore"></p>
+    <p class="case-text" id="finalMessage"></p>
+    <button class="primary-btn" onclick="restartGame()">다시 도전하기</button>
+    <button class="secondary-btn" onclick="showDrugCards()">응급약물 카드 보기</button>
+  </section>
+
+  <section id="drugCards" class="card hidden">
+    <h2>💉 응급약물 핵심 카드</h2>
+    <div class="drug-grid">
+      <div class="drug-card">
+        <h3>Epinephrine</h3>
+        <p><strong>상황:</strong> CPR, cardiac arrest, shock</p>
+        <p><strong>핵심:</strong> 심장과 혈압을 끌어올림</p>
+      </div>
+      <div class="drug-card">
+        <h3>Adenosine</h3>
+        <p><strong>상황:</strong> SVT</p>
+        <p><strong>핵심:</strong> 리듬을 순간적으로 끊음</p>
+      </div>
+      <div class="drug-card">
+        <h3>Amiodarone</h3>
+        <p><strong>상황:</strong> VT/VF</p>
+        <p><strong>핵심:</strong> 위험한 심실성 부정맥 조절</p>
+      </div>
+      <div class="drug-card">
+        <h3>Calcium Gluconate</h3>
+        <p><strong>상황:</strong> Hyperkalemia, ECG 변화</p>
+        <p><strong>핵심:</strong> 칼륨 제거가 아니라 심근 안정화</p>
+      </div>
+      <div class="drug-card">
+        <h3>Sodium Bicarbonate</h3>
+        <p><strong>상황:</strong> Severe acidosis, hyperkalemia</p>
+        <p><strong>핵심:</strong> 칼륨을 세포 내로 이동시키는 데 도움</p>
+      </div>
+      <div class="drug-card">
+        <h3>Dopamine Premix</h3>
+        <p><strong>상황:</strong> 저혈압, symptomatic bradycardia</p>
+        <p><strong>핵심:</strong> 혈압 유지</p>
+      </div>
+      <div class="drug-card">
+        <h3>Dobutamine</h3>
+        <p><strong>상황:</strong> 심기능 저하, 저심박출</p>
+        <p><strong>핵심:</strong> 심근 수축력 증가</p>
+      </div>
+      <div class="drug-card">
+        <h3>Norepinephrine</h3>
+        <p><strong>상황:</strong> Septic shock, severe hypotension</p>
+        <p><strong>핵심:</strong> 강력한 혈관수축, 혈압 유지</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  대전보훈병원 간호교육실 교육용 자료
+</footer>
+
+<script>
+  const questions = [
+    {
+      title: "CASE 1. Symptomatic Bradycardia",
+      text: "78세 남성 환자. 어지러움과 식은땀을 호소합니다. 혈압이 낮고 심박수가 느립니다.",
+      hr: "32",
+      bp: "70/40",
+      spo2: "92%",
+      ecg: "____/\\______/\\______/\\______",
+      question: "우선 고려할 약물은?",
+      options: ["Adenosine", "Dopamine premix", "Amiodarone"],
+      answer: "Dopamine premix",
+      correct: "정답입니다. 저혈압을 동반한 symptomatic bradycardia에서는 혈압과 심박 보조가 필요합니다.",
+      wrong: "Adenosine은 느린 심장에 사용하는 약물이 아닙니다. 이 상황은 혈압 유지와 심박 보조가 중요합니다."
+    },
+    {
+      title: "CASE 2. SVT",
+      text: "환자가 갑자기 두근거림을 호소합니다. ECG상 규칙적인 narrow QRS tachycardia가 관찰됩니다.",
+      hr: "180",
+      bp: "110/70",
+      spo2: "97%",
+      ecg: "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\",
+      question: "우선 고려할 약물은?",
+      options: ["Adenosine", "Dopamine premix", "Calcium gluconate"],
+      answer: "Adenosine",
+      correct: "정답입니다. Adenosine은 SVT에서 리듬을 순간적으로 끊는 목적으로 사용됩니다.",
+      wrong: "SVT에서는 Adenosine을 우선 고려합니다. 단, 투여 전 ECG monitoring과 빠른 IV push가 중요합니다."
+    },
+    {
+      title: "CASE 3. Hyperkalemia",
+      text: "CKD 병력이 있는 82세 환자. K 7.2, ECG에서 peaked T wave가 관찰됩니다.",
+      hr: "38",
+      bp: "88/50",
+      spo2: "94%",
+      ecg: "___/\\_____/\\_____/\\_____",
+      question: "가장 먼저 고려할 약물은?",
+      options: ["Calcium gluconate", "Sodium bicarbonate", "Dobutamine"],
+      answer: "Calcium gluconate",
+      correct: "정답입니다. ECG 변화가 동반된 고칼륨혈증에서는 심근 안정화가 우선입니다.",
+      wrong: "고칼륨혈증에서 ECG 변화가 있으면 우선 심장 보호가 중요합니다. Calcium gluconate는 칼륨 제거 약이 아니라 심근 안정화 목적입니다."
+    },
+    {
+      title: "CASE 4. Septic Shock",
+      text: "폐렴으로 입원 중인 환자. 수액 투여 후에도 혈압이 지속적으로 낮고 lactate 상승이 있습니다.",
+      hr: "122",
+      bp: "68/40",
+      spo2: "90%",
+      ecg: "/\\/\\/\\/\\/\\/\\/\\/\\/\\",
+      question: "우선 고려할 약물은?",
+      options: ["Dobutamine", "Norepinephrine", "Adenosine"],
+      answer: "Norepinephrine",
+      correct: "정답입니다. Septic shock에서 심한 저혈압이 지속되면 norepinephrine을 우선 고려합니다.",
+      wrong: "이 상황은 혈압 유지가 핵심입니다. Norepinephrine은 강력한 혈관수축으로 MAP 유지에 사용됩니다."
+    },
+    {
+      title: "CASE 5. Low Cardiac Output",
+      text: "심기능 저하 환자. 혈압은 비교적 유지되지만 말초 냉감, 소변량 감소, 저심박출 상태가 의심됩니다.",
+      hr: "105",
+      bp: "96/60",
+      spo2: "93%",
+      ecg: "_/\\__/\\__/\\__/\\__/\\__",
+      question: "심근 수축력 증가 목적으로 적절한 약물은?",
+      options: ["Dobutamine", "Norepinephrine", "Calcium gluconate"],
+      answer: "Dobutamine",
+      correct: "정답입니다. Dobutamine은 심근 수축력 증가, 저심박출 상태에서 고려됩니다.",
+      wrong: "이 상황의 핵심은 단순 혈압 상승보다 심근 수축력 보조입니다. Dobutamine을 기억하세요."
+    },
+    {
+      title: "CASE 6. VF Arrest",
+      text: "환자가 갑자기 의식 소실되었습니다. 모니터에서 VF가 확인되어 CPR과 shock이 시행되었습니다.",
+      hr: "VF",
+      bp: "--",
+      spo2: "--",
+      ecg: "^^^^^/\\/\\/^^^^\\/\\/\\/^^^^^",
+      question: "다음 단계에서 고려할 약물은?",
+      options: ["Epinephrine", "Adenosine", "Dopamine premix"],
+      answer: "Epinephrine",
+      correct: "정답입니다. VF/pulseless VT 상황에서는 CPR, shock과 함께 epinephrine 투여 시점을 기억해야 합니다.",
+      wrong: "Adenosine은 pulseless rhythm에 사용하는 약물이 아닙니다. VF arrest에서는 epinephrine을 고려합니다."
+    },
+    {
+      title: "CASE 7. Refractory VF/VT",
+      text: "VF가 지속되어 shock과 epinephrine 투여 후에도 리듬이 회복되지 않습니다.",
+      hr: "VF",
+      bp: "--",
+      spo2: "--",
+      ecg: "^^^^/\\/\\/\\/\\/\\/^^^^^",
+      question: "추가로 고려할 항부정맥제는?",
+      options: ["Amiodarone", "Adenosine", "Sodium bicarbonate"],
+      answer: "Amiodarone",
+      correct: "정답입니다. Amiodarone은 VF/pulseless VT에서 고려되는 항부정맥제입니다.",
+      wrong: "지속되는 VF/VT에서는 Amiodarone을 고려합니다. Adenosine은 SVT에서 사용하는 약물입니다."
+    },
+    {
+      title: "CASE 8. Hyperkalemia 추가 처치",
+      text: "고칼륨혈증 환자에게 calcium gluconate 투여 후 추가 처치가 필요합니다. 산증도 동반되어 있습니다.",
+      hr: "46",
+      bp: "92/54",
+      spo2: "95%",
+      ecg: "___/\\____/\\____/\\____",
+      question: "추가적으로 고려 가능한 약물은?",
+      options: ["Sodium bicarbonate", "Amiodarone", "Adenosine"],
+      answer: "Sodium bicarbonate",
+      correct: "정답입니다. Sodium bicarbonate는 산증 동반 고칼륨혈증에서 칼륨을 세포 내로 이동시키는 데 도움을 줄 수 있습니다.",
+      wrong: "산증이 동반된 고칼륨혈증에서는 Sodium bicarbonate를 고려할 수 있습니다."
+    }
+  ];
+
+  let currentIndex = 0;
+  let score = 0;
+  let answered = false;
+
+  function startGame() {
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("finishScreen").classList.add("hidden");
+    document.getElementById("drugCards").classList.add("hidden");
+    document.getElementById("gameScreen").classList.remove("hidden");
+    currentIndex = 0;
+    score = 0;
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    answered = false;
+    const q = questions[currentIndex];
+
+    document.getElementById("progressText").innerText =
+      `문제 ${currentIndex + 1} / ${questions.length}`;
+
+    document.getElementById("caseTitle").innerText = q.title;
+    document.getElementById("caseText").innerText = q.text;
+    document.getElementById("hr").innerText = q.hr;
+    document.getElementById("bp").innerText = q.bp;
+    document.getElementById("spo2").innerText = q.spo2;
+    document.getElementById("ecgText").innerText = q.ecg + q.ecg + q.ecg;
+    document.getElementById("questionText").innerText = q.question;
+
+    const optionsBox = document.getElementById("optionsBox");
+    optionsBox.innerHTML = "";
+
+    q.options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.innerText = option;
+      btn.onclick = () => checkAnswer(option);
+      optionsBox.appendChild(btn);
+    });
+
+    const resultBox = document.getElementById("resultBox");
+    resultBox.style.display = "none";
+    resultBox.className = "result";
+
+    document.getElementById("nextBtn").classList.add("hidden");
+  }
+
+  function checkAnswer(selected) {
+    if (answered) return;
+    answered = true;
+
+    const q = questions[currentIndex];
+    const resultBox = document.getElementById("resultBox");
+
+    if (selected === q.answer) {
+      score++;
+      resultBox.className = "result correct";
+      resultBox.innerHTML = `✅ <strong>정답!</strong><br>${q.correct}`;
+    } else {
+      resultBox.className = "result wrong";
+      resultBox.innerHTML = `🚨 <strong>상태 악화!</strong><br>${q.wrong}<br><br>정답: <strong>${q.answer}</strong>`;
+    }
+
+    resultBox.style.display = "block";
+    document.getElementById("nextBtn").classList.remove("hidden");
+  }
+
+  function nextQuestion() {
+    currentIndex++;
+
+    if (currentIndex < questions.length) {
+      loadQuestion();
+    } else {
+      finishGame();
+    }
+  }
+
+  function finishGame() {
+    document.getElementById("gameScreen").classList.add("hidden");
+    document.getElementById("finishScreen").classList.remove("hidden");
+
+    document.getElementById("finalScore").innerText =
+      `최종 점수: ${score} / ${questions.length}`;
+
+    let message = "";
+
+    if (score === questions.length) {
+      message = "완벽합니다. 응급상황에서 약물 선택 판단이 매우 좋습니다.";
+    } else if (score >= 5) {
+      message = "좋습니다. 헷갈린 약물만 다시 확인하면 실제 상황에서 더 자신 있게 대응할 수 있습니다.";
+    } else {
+      message = "응급약물은 반복 학습이 중요합니다. 약물 카드를 확인한 뒤 다시 도전해보세요.";
+    }
+
+    document.getElementById("finalMessage").innerText = message;
+  }
+
+  function restartGame() {
+    startGame();
+  }
+
+  function showDrugCards() {
+    document.getElementById("drugCards").classList.remove("hidden");
+    window.scrollTo({
+      top: document.getElementById("drugCards").offsetTop,
+      behavior: "smooth"
+    });
+  }
+</script>
+
+</body>
+</html>
