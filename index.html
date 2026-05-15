@@ -87,7 +87,12 @@
   width: 1200px;
   height: 80px;
   flex-shrink: 0;
-  animation: moveEcg 5s linear infinite;
+  /* 한 박자 폭(px)과 주기는 시나리오 HR에 맞춰 JS에서 설정 */
+  --ecg-beat-px: 300;
+  --ecg-shift: -300px;
+  --ecg-dur: 1.58s;
+  animation: moveEcg var(--ecg-dur) linear infinite;
+  will-change: transform;
 }
 
 .ecg path {
@@ -101,7 +106,7 @@
 
 @keyframes moveEcg {
   from { transform: translateX(0); }
-  to { transform: translateX(-300px); }
+  to { transform: translateX(var(--ecg-shift)); }
 }
 
     .case-title {
@@ -766,7 +771,13 @@
     bp: "88/50",
     spo2: "94%",
 
-   ecg: "M0 55 C40 55, 60 55, 80 55 C88 52, 92 48, 100 55 C108 55, 112 75, 118 20 C124 80, 130 55, 138 55 C150 55, 165 30, 185 8 C205 30, 220 55, 240 55 C320 55, 340 55, 360 55 C368 52, 372 48, 380 55 C388 55, 392 75, 398 20 C404 80, 410 55, 418 55 C430 55, 445 28, 465 5 C485 28, 500 55, 520 55 C600 55, 620 55, 640 55 C648 52, 652 48, 660 55 C668 55, 672 75, 678 20 C684 80, 690 55, 698 55 C710 55, 725 30, 745 8 C765 30, 780 55, 820 55 C900 55, 920 55, 940 55 C948 52, 952 48, 960 55 C968 55, 972 75, 978 20 C984 80, 990 55, 998 55 C1010 55, 1025 28, 1045 5 C1065 28, 1080 55, 1200 55",
+    /* 한 박자 300u: HR과 스크롤 주기 동기 + 고칼륨: tent-shaped peaked T, 약간 넓은 QRS */
+    ecgBeatWidth: 300,
+    ecg:
+      "M0 46 L68 46 C74 46 78 44 84 40 C90 43 94 46 100 46 L112 46 L116 49 L120 47 L126 31 L136 53 L142 46 L154 46 C168 46 176 42 188 28 C196 14 202 7 208 14 C216 28 228 46 242 46 L300 46 " +
+      "M300 46 L368 46 C374 46 378 44 384 40 C390 43 394 46 400 46 L412 46 L416 49 L420 47 L426 31 L436 53 L442 46 L454 46 C468 46 476 42 488 28 C496 14 502 7 508 14 C516 28 528 46 542 46 L600 46 " +
+      "M600 46 L668 46 C674 46 678 44 684 40 C690 43 694 46 700 46 L712 46 L716 49 L720 47 L726 31 L736 53 L742 46 L754 46 C768 46 776 42 788 28 C796 14 802 7 808 14 C816 28 828 46 842 46 L900 46 " +
+      "M900 46 L968 46 C974 46 978 44 984 40 C990 43 994 46 1000 46 L1012 46 L1016 49 L1020 47 L1026 31 L1036 53 L1042 46 L1054 46 C1068 46 1076 42 1088 28 C1096 14 1102 7 1108 14 C1116 28 1128 46 1142 46 L1200 46",
   
     steps: [
 
@@ -861,6 +872,13 @@ function loadQuestion() {
   document.getElementById("bp").innerText = scenario.bp;
   document.getElementById("spo2").innerText = scenario.spo2;
   document.getElementById("ecgLine").setAttribute("d", scenario.ecg);
+  const ecgSvg = document.querySelector(".ecg svg");
+  const beatPx = scenario.ecgBeatWidth != null ? scenario.ecgBeatWidth : 300;
+  const hrNum = parseInt(String(scenario.hr || "60").replace(/[^\d]/g, ""), 10) || 60;
+  const secPerBeat = Math.min(3, Math.max(0.3, 60 / hrNum));
+  ecgSvg.style.setProperty("--ecg-shift", "-" + beatPx + "px");
+  ecgSvg.style.setProperty("--ecg-dur", secPerBeat + "s");
+
   document.getElementById("questionText").innerText = step.question;
 
   const optionsBox = document.getElementById("optionsBox");
@@ -932,14 +950,18 @@ function nextQuestion() {
     document.getElementById("gameScreen").classList.add("hidden");
     document.getElementById("finishScreen").classList.remove("hidden");
 
+    const totalSteps = scenarios.reduce(function (n, s) {
+      return n + s.steps.length;
+    }, 0);
+
     document.getElementById("finalScore").innerText =
-      `최종 점수: ${score} / ${questions.length}`;
+      "최종 점수: " + score + " / " + totalSteps;
 
     let message = "";
 
-    if (score === questions.length) {
+    if (score === totalSteps) {
       message = "완벽합니다. 응급상황에서 약물 선택 판단이 매우 좋습니다.";
-    } else if (score >= 5) {
+    } else if (score >= Math.ceil(totalSteps * 0.66)) {
       message = "좋습니다. 헷갈린 약물만 다시 확인하면 실제 상황에서 더 자신 있게 대응할 수 있습니다.";
     } else {
       message = "응급약물은 반복 학습이 중요합니다. 약물 카드를 확인한 뒤 다시 도전해보세요.";
