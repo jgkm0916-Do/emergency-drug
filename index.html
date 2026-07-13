@@ -13,593 +13,7 @@
   <meta name="twitter:title" content="응급약물 완전 정복" />
   <meta name="twitter:description" content="상황에서 판단하는 응급약물 트레이닝. 약물 선택과 근거 판단을 단계별로 연습합니다." />
   <meta name="twitter:image" content="images/og-main-v2.png" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-      background: #eef2f7;
-      color: #111827;
-    }
-
-    .site-notice {
-      background: #1e293b;
-      color: #e2e8f0;
-      font-size: 12px;
-      line-height: 1.45;
-      padding: 6px 16px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .site-notice strong {
-      color: #fbbf24;
-      font-weight: 700;
-    }
-
-    header {
-      background: linear-gradient(135deg, #991b1b, #1e293b);
-      color: white;
-      padding: 24px 18px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    header p {
-      margin: 8px 0 0;
-      font-size: 15px;
-      opacity: 0.9;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 0 16px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 22px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      margin-bottom: 18px;
-    }
-
-    .monitor {
-      background: #020617;
-      color: #22c55e;
-      border-radius: 18px;
-      padding: 22px;
-      margin: 16px 0;
-      font-family: monospace;
-      box-shadow: inset 0 0 18px rgba(34,197,94,0.25);
-    }
-
-    .monitor-top {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    .vital {
-      border: 1px solid rgba(34,197,94,0.35);
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .vital strong {
-      display: block;
-      font-size: 28px;
-      margin-top: 4px;
-    }
-
-    .ecg {
-  height: 86px;
-  border-top: 1px solid rgba(34,197,94,0.25);
-  border-bottom: 1px solid rgba(34,197,94,0.25);
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-.ecg svg {
-  width: 1200px;
-  height: 80px;
-  flex-shrink: 0;
-  /* 한 박자 폭(px)과 주기는 시나리오 HR에 맞춰 JS에서 설정 */
-  --ecg-beat-px: 300;
-  --ecg-shift: -300px;
-  --ecg-dur: 1.58s;
-  animation: moveEcg var(--ecg-dur) linear infinite;
-  will-change: transform;
-}
-
-.ecg path {
-  fill: none;
-  stroke: #22c55e;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 5px rgba(34,197,94,0.8));
-}
-
-@keyframes moveEcg {
-  from { transform: translateX(0); }
-  to { transform: translateX(var(--ecg-shift)); }
-}
-
-    .case-title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .case-text {
-      line-height: 1.6;
-      color: #374151;
-      font-size: 16px;
-    }
-
-    .question {
-      font-size: 22px;
-      font-weight: 800;
-      margin: 22px 0 14px;
-    }
-
-    .options {
-      display: grid;
-      gap: 12px;
-    }
-
-    button {
-      border: none;
-      border-radius: 14px;
-      padding: 15px;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .option-btn {
-      background: #f1f5f9;
-      color: #111827;
-      text-align: left;
-    }
-
-    .option-btn:hover {
-      background: #dbeafe;
-      transform: translateY(-1px);
-    }
-
-    .primary-btn {
-      background: #991b1b;
-      color: white;
-      width: 100%;
-      margin-top: 14px;
-    }
-
-    .secondary-btn {
-      background: #1e293b;
-      color: white;
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    .result {
-      border-radius: 16px;
-      padding: 18px;
-      margin-top: 18px;
-      line-height: 1.6;
-      display: none;
-    }
-
-    .correct {
-      background: #dcfce7;
-      border: 2px solid #22c55e;
-      color: #166534;
-    }
-
-    .wrong {
-      background: #fee2e2;
-      border: 2px solid #ef4444;
-      color: #991b1b;
-    }
-
-    .progress {
-      font-weight: 700;
-      color: #475569;
-      margin-bottom: 12px;
-    }
-
-    .score {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 800;
-      margin-top: 12px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .drug-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  margin-top: 22px;
-}
-
-.drug-card {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 18px;
-  border: 1px solid #e5e7eb;
-  border-left: 5px solid #b91c1c;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
-  min-height: 520px;
-}
-
-.drug-card h3 {
-  margin: 0 0 10px;
-  font-size: 19px;
-  text-align: center;
-  color: #020617;
-}
-
-.drug-code {
-  display: block;
-  width: fit-content;
-  margin: 0 auto 12px;
-  background: #b91c1c;
-  color: #ffffff !important;
-  padding: 7px 13px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 800;
-  text-align: center;
-}
-
-.drug-img {
-  width: 100%;
-  max-width: 150px;
-  height: 170px;
-  display: block;
-  margin: 8px auto 16px;
-  object-fit: contain;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 8px;
-}
-
-.drug-info {
-  display: grid;
-  gap: 8px;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.drug-info p {
-  margin: 0;
-}
-
-.info-label {
-  display: inline-block;
-  font-weight: 800;
-  color: #111827;
-  margin-right: 4px;
-}
-
-.study-note {
-  background: #eff6ff;
-  color: #1e3a8a;
-  border: 1px solid #bfdbfe;
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-top: 20px;
-  font-size: 14px;
-}
-
-@media (max-width: 1100px) {
-  .drug-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .drug-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .drug-card {
-    min-height: auto;
-  }
-}
-
-   footer.site-footer {
-  text-align: center;
-  padding: 10px 16px 22px;
-  color: #94a3b8;
-  font-size: 12px;
-  letter-spacing: 0.01em;
-}
-
-    .page-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 0 14px;
-      margin: 0 0 4px;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-      background: linear-gradient(180deg, #eef2f7 70%, rgba(238, 242, 247, 0));
-    }
-
-    .page-nav.hidden {
-      display: none;
-    }
-
-    .page-nav-btn {
-      background: #ffffff;
-      color: #1e293b;
-      border: 1px solid #cbd5e1;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
-    }
-
-    .page-nav-btn:hover {
-      background: #f1f5f9;
-      border-color: #94a3b8;
-    }
-
-    .home-lead {
-      margin: 0 0 18px;
-      text-align: center;
-      font-size: 15px;
-      line-height: 1.5;
-      color: #475569;
-    }
-
-    .home-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .home-card {
-      padding: 20px 18px 22px;
-    }
-
-    .home-tile {
-      min-height: 140px;
-      width: 100%;
-      margin: 0;
-      border: none;
-      border-radius: 18px;
-      padding: 18px 14px;
-      cursor: pointer;
-      text-align: center;
-      font-weight: 800;
-      font-size: 17px;
-      line-height: 1.35;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.15);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .home-tile:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.2);
-    }
-
-    .home-tile:active {
-      transform: translateY(-1px);
-    }
-
-    .home-tile .tile-emoji {
-      font-size: 32px;
-      line-height: 1;
-    }
-
-    .home-tile .tile-sub {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      opacity: 0.88;
-      line-height: 1.4;
-      max-width: 17em;
-    }
-
-    .home-tile--study {
-      background: linear-gradient(145deg, #1d4ed8, #1e3a8a);
-    }
-
-    .home-tile--drug {
-      background: linear-gradient(145deg, #b91c1c, #7f1d1d);
-    }
-
-    .home-tile--quiz {
-      background: linear-gradient(145deg, #0f766e, #134e4a);
-    }
-
-    .home-tile--guide {
-      background: linear-gradient(145deg, #475569, #1e293b);
-    }
-
-    .home-guide {
-      margin-top: 0;
-      padding: 0;
-      border: none;
-    }
-
-    .home-guide:not(.hidden) {
-      margin-top: 16px;
-      padding: 16px 14px;
-      background: #f8fafc;
-      border-radius: 14px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .home-guide-title {
-      margin: 0 0 12px;
-      font-size: 15px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .home-guide:not(.hidden) .case-text:first-of-type {
-      margin-top: 0;
-    }
-
-    @media (max-width: 520px) {
-      .container {
-        padding: 0 14px;
-        margin: 14px auto;
-      }
-
-      .home-card {
-        padding: 16px 14px 18px;
-        border-radius: 16px;
-        margin-bottom: 14px;
-      }
-
-      .home-grid {
-        grid-template-columns: 1fr;
-        gap: 11px;
-      }
-
-      .home-tile {
-        min-height: 108px;
-        padding: 15px 12px;
-        border-radius: 15px;
-        gap: 6px;
-        font-size: 16px;
-      }
-
-      .home-tile .tile-emoji {
-        font-size: 28px;
-      }
-
-      .home-tile .tile-sub {
-        font-size: 11px;
-      }
-
-      .home-lead {
-        margin-bottom: 14px;
-        font-size: 14px;
-      }
-
-      .page-nav {
-        gap: 6px;
-        padding: 8px 0 12px;
-      }
-
-      .page-nav-btn {
-        padding: 7px 11px;
-        font-size: 12px;
-      }
-    }
-
-.drug-code {
-  display: inline-block;
-  background: #991b1b;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  margin: 8px 0 12px;
-}
-
-.drug-img {
-  width: 100%;
-  max-width: 180px;
-  display: block;
-  margin: 10px auto 16px;
-  object-fit: contain;
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-}
-
-    .compare-group {
-  margin-top: 28px;
-}
-
-.compare-group h3 {
-  margin-bottom: 12px;
-  color: #991b1b;
-  font-size: 20px;
-}
-
-    .scenario-card {
-  background: white;
-  border-radius: 20px;
-  padding: 24px;
-  margin-top: 28px;
-  box-shadow: 0 6px 16px rgba(15,23,42,0.06);
-}
-
-.scenario-card h3 {
-  margin-top: 0;
-  margin-bottom: 18px;
-  color: #991b1b;
-  font-size: 24px;
-}
-
-.scenario-drugs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
-}
-
-.mini-drug-card {
-  background: #f8fafc;
-  border-radius: 18px;
-  padding: 18px;
-  border-left: 5px solid #991b1b;
-}
-
-.mini-drug-card h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 20px;
-}
-
-.mini-drug-card p {
-  margin: 12px 0 0;
-  line-height: 1.5;
-  font-size: 14px;
-}
-
-.mini-code {
-  display: inline-block;
-  background: #991b1b;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  margin-right: 6px;
-}
-    
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
@@ -641,23 +55,6 @@
         실전 시뮬레이션
         <span class="tile-sub">모니터링·단계별 선택</span>
       </button>
-      <button type="button" class="home-tile home-tile--guide" onclick="document.getElementById('homeGuide').classList.toggle('hidden')">
-        <span class="tile-emoji" aria-hidden="true">ℹ️</span>
-        이용 방법
-        <span class="tile-sub">소개·학습 순서</span>
-      </button>
-    </div>
-
-    <div id="homeGuide" class="home-guide hidden">
-      <h3 class="home-guide-title">이용 방법</h3>
-      <p class="case-text">
-        이 학습은 응급약물을 단순 암기하는 것이 아니라,
-        실제 상황에서 <strong>어떤 약을 왜 선택해야 하는지</strong> 판단하는 훈련입니다.
-      </p>
-      <p class="case-text">
-        <strong>기초 약물 학습</strong>에서 약물별 기초를 확인하고,
-        <strong>실전 시뮬레이션</strong>에서 상황 판단 훈련을 이어가 보세요.
-      </p>
     </div>
   </section>
 
@@ -706,101 +103,189 @@
   <div class="drug-grid">
 
     <div class="drug-card">
+      <img src="images/MEPI.jpg" class="drug-img" alt="Epinephrine">
       <h3>Epinephrine</h3>
       <p class="drug-code">병원코드: MEPI</p>
-      <img src="images/MEPI.jpg" class="drug-img" alt="Epinephrine">
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> cardiac arrest, CPR, pulseless VT/VF</p>
-        <p><span class="info-label">기대 변화</span> 심근 수축력 증가, 혈관수축, 관상동맥 관류압 증가</p>
-        <p><span class="info-label">간호 포인트</span> CPR 중 투여 시점, route, flush 확인</p>
-        <p><span class="info-label">주의</span> ROSC 후 빈맥, 혈압 상승, 부정맥 가능성</p>
+        <p><span class="info-label">함량·제형</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 사용 상황</span> cardiac arrest, CPR, pulseless VT/VF</p>
+        <p><span class="info-label">작용 및 기대 변화</span> 심근 수축력 증가, 혈관수축, 관상동맥 관류압 증가</p>
+        <p><span class="info-label">핵심 간호 포인트</span> CPR 중 투여 시점, route, flush 확인</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> ROSC 후 빈맥, 혈압 상승, 부정맥 가능성</p>
+        <p><span class="info-label">주의사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">핵심 기억 문장</span> 병원 프로토콜 확인 후 입력 예정</p>
       </div>
     </div>
 
     <div class="drug-card">
+      <img src="images/MADEN.jpg" class="drug-img" alt="Adenosine">
       <h3>Adenosine</h3>
       <p class="drug-code">병원코드: MADEN</p>
-      <img src="images/MADEN.jpg" class="drug-img" alt="Adenosine">
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> stable SVT</p>
-        <p><span class="info-label">기대 변화</span> AV node 순간 차단 → 리듬 전환</p>
-        <p><span class="info-label">간호 포인트</span> 빠른 IV push + flush, ECG monitoring</p>
-        <p><span class="info-label">주의</span> 일시적 무수축처럼 보일 수 있음</p>
+        <p><span class="info-label">함량·제형</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 사용 상황</span> stable SVT</p>
+        <p><span class="info-label">작용 및 기대 변화</span> AV node 순간 차단 → 리듬 전환</p>
+        <p><span class="info-label">핵심 간호 포인트</span> 빠른 IV push + flush, ECG monitoring</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주의사항</span> 일시적 무수축처럼 보일 수 있음</p>
+        <p><span class="info-label">핵심 기억 문장</span> 병원 프로토콜 확인 후 입력 예정</p>
       </div>
     </div>
 
     <div class="drug-card">
+      <img src="images/MCDR.jpg" class="drug-img" alt="Amiodarone">
       <h3>Amiodarone</h3>
       <p class="drug-code">병원코드: MCDR</p>
-      <img src="images/MCDR.jpg" class="drug-img" alt="Amiodarone">
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> VT/VF, recurrent ventricular arrhythmia</p>
-        <p><span class="info-label">기대 변화</span> 심실성 부정맥 억제, 리듬 안정화</p>
-        <p><span class="info-label">간호 포인트</span> ECG, BP, 투여 속도 확인</p>
-        <p><span class="info-label">주의</span> QT prolongation, hypotension, bradycardia</p>
+        <p><span class="info-label">함량·제형</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 사용 상황</span> VT/VF, recurrent ventricular arrhythmia</p>
+        <p><span class="info-label">작용 및 기대 변화</span> 심실성 부정맥 억제, 리듬 안정화</p>
+        <p><span class="info-label">핵심 간호 포인트</span> ECG, BP, 투여 속도 확인</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> QT prolongation, hypotension, bradycardia</p>
+        <p><span class="info-label">주의사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">핵심 기억 문장</span> 병원 프로토콜 확인 후 입력 예정</p>
       </div>
     </div>
 
     <div class="drug-card">
+      <img src="images/MCAGLU.jpg" class="drug-img" alt="Calcium Gluconate">
       <h3>Calcium Gluconate</h3>
       <p class="drug-code">병원코드: MCAGLU</p>
-      <img src="images/MCAGLU.jpg" class="drug-img" alt="Calcium Gluconate">
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> hyperkalemia + ECG 변화</p>
-        <p><span class="info-label">기대 변화</span> 심근세포막 안정화</p>
-        <p><span class="info-label">핵심</span> 칼륨 제거 약물이 아님</p>
-        <p><span class="info-label">주의</span> ECG 변화 지속 관찰</p>
+        <p><span class="info-label">함량·제형</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 사용 상황</span> hyperkalemia + ECG 변화</p>
+        <p><span class="info-label">작용 및 기대 변화</span> 심근세포막 안정화</p>
+        <p><span class="info-label">핵심 간호 포인트</span> ECG 변화 지속 관찰</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주의사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">핵심 기억 문장</span> 칼륨 제거 약물이 아님</p>
       </div>
     </div>
 
     <div class="drug-card">
+      <img src="images/MBIVON.jpg" class="drug-img" alt="Sodium Bicarbonate">
       <h3>Sodium Bicarbonate</h3>
       <p class="drug-code">병원코드: MBIVON</p>
-      <img src="images/MBIVON.jpg" class="drug-img" alt="Sodium Bicarbonate">
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> severe acidosis, hyperkalemia with acidosis</p>
-        <p><span class="info-label">기대 변화</span> 산증 완화, 칼륨 세포 내 이동 보조</p>
-        <p><span class="info-label">간호 포인트</span> ABGA, Na, K monitoring</p>
-        <p><span class="info-label">주의</span> 무조건적 사용보다 산증 동반 여부 확인</p>
+        <p><span class="info-label">함량·제형</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 사용 상황</span> severe acidosis, hyperkalemia with acidosis</p>
+        <p><span class="info-label">작용 및 기대 변화</span> 산증 완화, 칼륨 세포 내 이동 보조</p>
+        <p><span class="info-label">핵심 간호 포인트</span> ABGA, Na, K monitoring</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주의사항</span> 무조건적 사용보다 산증 동반 여부 확인</p>
+        <p><span class="info-label">핵심 기억 문장</span> 병원 프로토콜 확인 후 입력 예정</p>
       </div>
     </div>
 
     <div class="drug-card">
+      <img src="images/MDOPA.jpg" class="drug-img" alt="Dopamine">
       <h3>Dopamine</h3>
       <p class="drug-code">병원코드: MDOPA</p>
-      <img src="images/MDOPA.jpg" class="drug-img" alt="Dopamine">
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> hypotension, symptomatic bradycardia</p>
-        <p><span class="info-label">기대 변화</span> HR/BP 상승, 말초관류 개선</p>
-        <p><span class="info-label">간호 포인트</span> BP, HR, infusion rate 확인</p>
-        <p><span class="info-label">주의</span> tachycardia, arrhythmia</p>
+        <p><span class="info-label">함량·제형</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 사용 상황</span> hypotension, symptomatic bradycardia</p>
+        <p><span class="info-label">작용 및 기대 변화</span> HR/BP 상승, 말초관류 개선</p>
+        <p><span class="info-label">핵심 간호 포인트</span> BP, HR, infusion rate 확인</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> tachycardia, arrhythmia</p>
+        <p><span class="info-label">주의사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">핵심 기억 문장</span> 병원 프로토콜 확인 후 입력 예정</p>
       </div>
     </div>
 
     <div class="drug-card">
+      <img src="images/MLEVO.jpg" class="drug-img" alt="Norepinephrine">
       <h3>Norepinephrine</h3>
       <p class="drug-code">병원코드: MLEVO</p>
-      <img src="images/MLEVO.jpg" class="drug-img" alt="Norepinephrine">
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> septic shock, severe hypotension</p>
-        <p><span class="info-label">기대 변화</span> 강한 혈관수축 → MAP 상승</p>
-        <p><span class="info-label">간호 포인트</span> MAP/BP, 말초순환, 정맥로 확인</p>
-        <p><span class="info-label">주의</span> infiltration, peripheral ischemia</p>
+        <p><span class="info-label">함량·제형</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 사용 상황</span> septic shock, severe hypotension</p>
+        <p><span class="info-label">작용 및 기대 변화</span> 강한 혈관수축 → MAP 상승</p>
+        <p><span class="info-label">핵심 간호 포인트</span> MAP/BP, 말초순환, 정맥로 확인</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주의사항</span> infiltration, peripheral ischemia</p>
+        <p><span class="info-label">핵심 기억 문장</span> 병원 프로토콜 확인 후 입력 예정</p>
       </div>
     </div>
 
     <div class="drug-card">
-      <h3>Dopamine Premix</h3>
-      <p class="drug-code">병원코드: M8DOPAM / M16DOPAM</p>
-      <div style="display:flex; gap:8px; justify-content:center;">
+      <div class="drug-img-row">
         <img src="images/M8DOPAM.jpg" class="drug-img" alt="Dopamine Premix 800mg">
         <img src="images/M16DOPAM.jpg" class="drug-img" alt="Dopamine Premix 1600mg">
       </div>
+      <h3>Dopamine Premix</h3>
+      <p class="drug-code">병원코드: M8DOPAM / M16DOPAM</p>
       <div class="drug-info">
-        <p><span class="info-label">주요 상황</span> severe hypotension, shock</p>
-        <p><span class="info-label">기대 변화</span> BP 상승, perfusion 개선</p>
-        <p><span class="info-label">간호 포인트</span> infusion pump 사용, 농도 확인</p>
-        <p><span class="info-label">주의</span> 800mg / 1600mg 용량 구분</p>
+        <p><span class="info-label">함량·제형</span> 800mg / 1600mg Premix</p>
+        <p><span class="info-label">주요 사용 상황</span> severe hypotension, shock</p>
+        <p><span class="info-label">작용 및 기대 변화</span> BP 상승, perfusion 개선</p>
+        <p><span class="info-label">핵심 간호 포인트</span> infusion pump 사용, 농도 확인</p>
+      </div>
+      <button type="button" class="detail-toggle-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">투여방법 및 상세정보 보기</button>
+      <div class="drug-detail hidden">
+        <p><span class="info-label">투여 경로</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">희석 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 또는 주입 방법</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 전 확인사항</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">투여 중 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주요 부작용</span> 병원 프로토콜 확인 후 입력 예정</p>
+        <p><span class="info-label">주의사항</span> 800mg / 1600mg 용량 구분</p>
+        <p><span class="info-label">핵심 기억 문장</span> 병원 프로토콜 확인 후 입력 예정</p>
       </div>
     </div>
 
@@ -821,154 +306,79 @@
     <strong>어떤 상황에서 왜 사용하는지</strong> 연결해서 기억하는 것이 중요합니다.
   </p>
 
-  <!-- CPR -->
-
   <div class="scenario-card">
-
     <h3>🚨 Cardiac Arrest / CPR</h3>
-
-    <div class="scenario-drugs">
-
-      <div class="mini-drug-card">
-        <h4>Epinephrine</h4>
-        <span class="mini-code">MEPI</span>
-
-        <p><strong>왜 사용?</strong><br>
-        관상동맥 관류압 증가, 심장 자극</p>
-
-        <p><strong>핵심 포인트</strong><br>
-        CPR 중 투여 시점 + flush</p>
-      </div>
-
-      <div class="mini-drug-card">
-        <h4>Amiodarone</h4>
-        <span class="mini-code">MCDR</span>
-
-        <p><strong>왜 사용?</strong><br>
-        Refractory VF/VT 안정화</p>
-
-        <p><strong>핵심 포인트</strong><br>
-        ECG/BP monitoring</p>
-      </div>
-
+    <div class="scenario-flow">
+      <p><span class="info-label">상황 인지 기준</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 확인할 검사 및 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 처치</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">고려 약물</span> Epinephrine (MEPI), Amiodarone (MCDR)</p>
+      <p><span class="info-label">약물 사용 목적</span> Epinephrine: 관상동맥 관류압 증가, 심장 자극 / Amiodarone: Refractory VF/VT 안정화</p>
+      <p><span class="info-label">간호사가 준비할 사항</span> CPR 중 투여 시점 + flush, ECG/BP monitoring</p>
+      <p><span class="info-label">투여 후 재평가</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">다음 단계</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">즉시 보고할 이상 반응</span> 병원 프로토콜 확인 후 입력 예정</p>
     </div>
-
   </div>
 
-  <!-- SVT -->
-
   <div class="scenario-card">
-
     <h3>⚡ Stable SVT</h3>
-
-    <div class="scenario-drugs">
-
-      <div class="mini-drug-card">
-        <h4>Adenosine</h4>
-        <span class="mini-code">MADEN</span>
-
-        <p><strong>왜 사용?</strong><br>
-        AV node 순간 차단 → 리듬 전환</p>
-
-        <p><strong>핵심 포인트</strong><br>
-        빠른 IV push + flush</p>
-      </div>
-
+    <div class="scenario-flow">
+      <p><span class="info-label">상황 인지 기준</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 확인할 검사 및 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 처치</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">고려 약물</span> Adenosine (MADEN)</p>
+      <p><span class="info-label">약물 사용 목적</span> AV node 순간 차단 → 리듬 전환</p>
+      <p><span class="info-label">간호사가 준비할 사항</span> 빠른 IV push + flush</p>
+      <p><span class="info-label">투여 후 재평가</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">다음 단계</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">즉시 보고할 이상 반응</span> 병원 프로토콜 확인 후 입력 예정</p>
     </div>
-
   </div>
 
-  <!-- Hyperkalemia -->
-
   <div class="scenario-card">
-
     <h3>🫀 Hyperkalemia + ECG 변화</h3>
-
-    <div class="scenario-drugs">
-
-      <div class="mini-drug-card">
-        <h4>Calcium Gluconate</h4>
-        <span class="mini-code">MCAGLU</span>
-
-        <p><strong>왜 사용?</strong><br>
-        심근세포막 안정화</p>
-
-        <p><strong>헷갈림 주의</strong><br>
-        칼륨 제거 약물 아님</p>
-      </div>
-
-      <div class="mini-drug-card">
-        <h4>Sodium Bicarbonate</h4>
-        <span class="mini-code">MBIVON</span>
-
-        <p><strong>왜 사용?</strong><br>
-        산증 완화 + K 세포 내 이동 보조</p>
-
-        <p><strong>헷갈림 주의</strong><br>
-        산증 동반 여부 확인</p>
-      </div>
-
+    <div class="scenario-flow">
+      <p><span class="info-label">상황 인지 기준</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 확인할 검사 및 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 처치</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">고려 약물</span> Calcium Gluconate (MCAGLU), Sodium Bicarbonate (MBIVON)</p>
+      <p><span class="info-label">약물 사용 목적</span> Calcium Gluconate: 심근세포막 안정화 / Sodium Bicarbonate: 산증 완화 + K 세포 내 이동 보조</p>
+      <p><span class="info-label">간호사가 준비할 사항</span> Calcium Gluconate는 칼륨 제거 약물이 아님, 산증 동반 여부 확인</p>
+      <p><span class="info-label">투여 후 재평가</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">다음 단계</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">즉시 보고할 이상 반응</span> 병원 프로토콜 확인 후 입력 예정</p>
     </div>
-
   </div>
 
-  <!-- Shock -->
-
   <div class="scenario-card">
-
     <h3>🩸 Septic Shock / Severe Hypotension</h3>
-
-    <div class="scenario-drugs">
-
-      <div class="mini-drug-card">
-        <h4>Norepinephrine</h4>
-        <span class="mini-code">MLEVO</span>
-
-        <p><strong>왜 사용?</strong><br>
-        강한 혈관수축 → MAP 유지</p>
-
-        <p><strong>핵심 포인트</strong><br>
-        MAP/BP 지속 모니터링</p>
-      </div>
-
-      <div class="mini-drug-card">
-        <h4>Dopamine Premix</h4>
-
-        <span class="mini-code">M8DOPAM</span>
-        <span class="mini-code">M16DOPAM</span>
-
-        <p><strong>왜 사용?</strong><br>
-        혈압 상승, perfusion 개선</p>
-
-        <p><strong>핵심 포인트</strong><br>
-        농도/용량 구분</p>
-      </div>
-
+    <div class="scenario-flow">
+      <p><span class="info-label">상황 인지 기준</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 확인할 검사 및 모니터링</span> MAP/BP 지속 모니터링</p>
+      <p><span class="info-label">우선 처치</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">고려 약물</span> Norepinephrine (MLEVO), Dopamine Premix (M8DOPAM / M16DOPAM)</p>
+      <p><span class="info-label">약물 사용 목적</span> Norepinephrine: 강한 혈관수축 → MAP 유지 / Dopamine Premix: 혈압 상승, perfusion 개선</p>
+      <p><span class="info-label">간호사가 준비할 사항</span> 농도/용량 구분</p>
+      <p><span class="info-label">투여 후 재평가</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">다음 단계</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">즉시 보고할 이상 반응</span> 병원 프로토콜 확인 후 입력 예정</p>
     </div>
-
   </div>
 
-  <!-- Bradycardia -->
-
   <div class="scenario-card">
-
     <h3>💓 Bradycardia + Hypotension</h3>
-
-    <div class="scenario-drugs">
-
-      <div class="mini-drug-card">
-        <h4>Dopamine</h4>
-        <span class="mini-code">MDOPA</span>
-
-        <p><strong>왜 사용?</strong><br>
-        HR/BP 상승</p>
-
-        <p><strong>핵심 포인트</strong><br>
-        Tachycardia 관찰</p>
-      </div>
-
+    <div class="scenario-flow">
+      <p><span class="info-label">상황 인지 기준</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 확인할 검사 및 모니터링</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">우선 처치</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">고려 약물</span> Dopamine (MDOPA)</p>
+      <p><span class="info-label">약물 사용 목적</span> HR/BP 상승</p>
+      <p><span class="info-label">간호사가 준비할 사항</span> Tachycardia 관찰</p>
+      <p><span class="info-label">투여 후 재평가</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">다음 단계</span> 병원 프로토콜 확인 후 입력 예정</p>
+      <p><span class="info-label">즉시 보고할 이상 반응</span> 병원 프로토콜 확인 후 입력 예정</p>
     </div>
-
   </div>
 
 </section>
@@ -979,257 +389,9 @@
   대전보훈병원 간호교육실 교육용 자료
 </footer>
 
-<script>
- const scenarios = [
-
-  {
-    title: "CASE 1. Hyperkalemia",
-    text: "82세 CKD 환자. K 7.2, HR 38, ECG에서 peaked T wave가 관찰됩니다.",
-    hr: "38",
-    bp: "88/50",
-    spo2: "94%",
-
-    /* 한 박자 300u: HR과 스크롤 주기 동기 + 고칼륨: tent-shaped peaked T, 약간 넓은 QRS */
-    ecgBeatWidth: 300,
-    ecg:
-      "M0 46 L68 46 C74 46 78 44 84 40 C90 43 94 46 100 46 L112 46 L116 49 L120 47 L126 31 L136 53 L142 46 L154 46 C168 46 176 42 188 28 C196 14 202 7 208 14 C216 28 228 46 242 46 L300 46 " +
-      "M300 46 L368 46 C374 46 378 44 384 40 C390 43 394 46 400 46 L412 46 L416 49 L420 47 L426 31 L436 53 L442 46 L454 46 C468 46 476 42 488 28 C496 14 502 7 508 14 C516 28 528 46 542 46 L600 46 " +
-      "M600 46 L668 46 C674 46 678 44 684 40 C690 43 694 46 700 46 L712 46 L716 49 L720 47 L726 31 L736 53 L742 46 L754 46 C768 46 776 42 788 28 C796 14 802 7 808 14 C816 28 828 46 842 46 L900 46 " +
-      "M900 46 L968 46 C974 46 978 44 984 40 C990 43 994 46 1000 46 L1012 46 L1016 49 L1020 47 L1026 31 L1036 53 L1042 46 L1054 46 C1068 46 1076 42 1088 28 C1096 14 1102 7 1108 14 C1116 28 1128 46 1142 46 L1200 46",
-  
-    steps: [
-
-      {
-        question: "STEP 1. 가장 먼저 고려할 약물은?",
-        options: [
-          "Calcium gluconate",
-          "Sodium bicarbonate",
-          "Amiodarone"
-        ],
-
-        answer: "Calcium gluconate",
-
-        correct:
-          "정답입니다. ECG 변화가 동반된 고칼륨혈증에서는 심근 안정화가 가장 우선입니다.",
-
-        wrong:
-          "먼저 심장을 보호해야 합니다. Calcium gluconate는 심근 안정화 목적입니다."
-      },
-
-      {
-        question: "STEP 2. Calcium gluconate의 투약 목적은?",
-
-        options: [
-          "칼륨 제거",
-          "심근 안정화",
-          "이뇨 촉진"
-        ],
-
-        answer: "심근 안정화",
-
-        correct:
-          "정답입니다. Calcium gluconate는 칼륨을 직접 제거하지 않고 심근을 안정화합니다.",
-
-        wrong:
-          "Calcium gluconate는 칼륨 제거 약물이 아닙니다."
-      },
-
-      {
-        question: "STEP 3. 산증이 동반된 경우 추가 고려 가능한 약물은?",
-
-        options: [
-          "Sodium bicarbonate",
-          "Adenosine",
-          "Dobutamine"
-        ],
-
-        answer: "Sodium bicarbonate",
-
-        correct:
-          "정답입니다. 산증이 동반된 고칼륨혈증에서는 Sodium bicarbonate를 고려할 수 있습니다.",
-
-        wrong:
-          "산증이 동반된 경우 Sodium bicarbonate가 K의 세포 내 이동을 보조할 수 있습니다."
-      }
-
-    ]
-  }
-
-];
-  let currentScenarioIndex = 0;
-  let currentStepIndex = 0;
-  let score = 0;
-  let answered = false;
-
-  function startGame() {
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.add("hidden");
-  document.getElementById("drugCards").classList.add("hidden");
-  document.getElementById("studyScreen").classList.add("hidden");
-  document.getElementById("gameScreen").classList.remove("hidden");
-
-  currentScenarioIndex = 0;
-  currentStepIndex = 0;
-  score = 0;
-
-  loadQuestion();
-}
-
-function loadQuestion() {
-  answered = false;
-
-  const scenario = scenarios[currentScenarioIndex];
-  const step = scenario.steps[currentStepIndex];
-
-  document.getElementById("progressText").innerText =
-    `CASE ${currentScenarioIndex + 1} / ${scenarios.length} · STEP ${currentStepIndex + 1} / ${scenario.steps.length}`;
-
-  document.getElementById("caseTitle").innerText = scenario.title;
-  document.getElementById("caseText").innerText = scenario.text;
-  document.getElementById("hr").innerText = scenario.hr;
-  document.getElementById("bp").innerText = scenario.bp;
-  document.getElementById("spo2").innerText = scenario.spo2;
-  document.getElementById("ecgLine").setAttribute("d", scenario.ecg);
-  const ecgSvg = document.querySelector(".ecg svg");
-  const beatPx = scenario.ecgBeatWidth != null ? scenario.ecgBeatWidth : 300;
-  const hrNum = parseInt(String(scenario.hr || "60").replace(/[^\d]/g, ""), 10) || 60;
-  const secPerBeat = Math.min(3, Math.max(0.3, 60 / hrNum));
-  ecgSvg.style.setProperty("--ecg-shift", "-" + beatPx + "px");
-  ecgSvg.style.setProperty("--ecg-dur", secPerBeat + "s");
-
-  document.getElementById("questionText").innerText = step.question;
-
-  const optionsBox = document.getElementById("optionsBox");
-  optionsBox.innerHTML = "";
-
-  step.options.forEach(option => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.innerText = option;
-    btn.onclick = () => checkAnswer(option);
-    optionsBox.appendChild(btn);
-  });
-
-  const resultBox = document.getElementById("resultBox");
-  resultBox.style.display = "none";
-  resultBox.className = "result";
-
-  const nextBtn = document.getElementById("nextBtn");
-  nextBtn.classList.add("hidden");
-
-  if (currentStepIndex < scenario.steps.length - 1) {
-    nextBtn.innerText = "다음 STEP";
-  } else {
-    nextBtn.innerText = "다음 CASE";
-  }
-}
-
-function checkAnswer(selected) {
-  if (answered) return;
-  answered = true;
-
-  const scenario = scenarios[currentScenarioIndex];
-  const step = scenario.steps[currentStepIndex];
-  const resultBox = document.getElementById("resultBox");
-
-  if (selected === step.answer) {
-    score++;
-    resultBox.className = "result correct";
-    resultBox.innerHTML = `✅ <strong>정답!</strong><br>${step.correct}`;
-  } else {
-    resultBox.className = "result wrong";
-    resultBox.innerHTML = `🚨 <strong>다시 확인!</strong><br>${step.wrong}<br><br>정답: <strong>${step.answer}</strong>`;
-  }
-
-  resultBox.style.display = "block";
-  document.getElementById("nextBtn").classList.remove("hidden");
-}
-
-function nextQuestion() {
-  const scenario = scenarios[currentScenarioIndex];
-
-  if (currentStepIndex < scenario.steps.length - 1) {
-    currentStepIndex++;
-    loadQuestion();
-    return;
-  }
-
-  currentScenarioIndex++;
-  currentStepIndex = 0;
-
-  if (currentScenarioIndex < scenarios.length) {
-    loadQuestion();
-  } else {
-    finishGame();
-  }
-}
-
-  function finishGame() {
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("finishScreen").classList.remove("hidden");
-
-    const totalSteps = scenarios.reduce(function (n, s) {
-      return n + s.steps.length;
-    }, 0);
-
-    document.getElementById("finalScore").innerText =
-      "최종 점수: " + score + " / " + totalSteps;
-
-    let message = "";
-
-    if (score === totalSteps) {
-      message = "완벽합니다. 응급상황에서 약물 선택 판단이 매우 좋습니다.";
-    } else if (score >= Math.ceil(totalSteps * 0.66)) {
-      message = "좋습니다. 헷갈린 약물만 다시 확인하면 실제 상황에서 더 자신 있게 대응할 수 있습니다.";
-    } else {
-      message = "응급약물은 반복 학습이 중요합니다. 약물 카드를 확인한 뒤 다시 도전해보세요.";
-    }
-
-    document.getElementById("finalMessage").innerText = message;
-  }
-
-  function restartGame() {
-    startGame();
-  }
-
-  function showDrugCards() {
-  showTab("drug");
-}
-  
-  function showTab(tab) {
-
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.add("hidden");
-  document.getElementById("drugCards").classList.add("hidden");
-  document.getElementById("studyScreen").classList.add("hidden");
-
-  var pageNav = document.getElementById("pageNav");
-  var homeGuide = document.getElementById("homeGuide");
-
-  if (tab === "home") {
-    document.getElementById("startScreen").classList.remove("hidden");
-    pageNav.classList.add("hidden");
-  } else {
-    pageNav.classList.remove("hidden");
-    if (homeGuide) homeGuide.classList.add("hidden");
-  }
-
-  if(tab === "quiz") {
-  startGame();
-}
-
-  if(tab === "drug") {
-    document.getElementById("drugCards").classList.remove("hidden");
-  }
-
-   if(tab === "study") {
-   document.getElementById("studyScreen").classList.remove("hidden");
-  }
-
-
-}
-</script>
+  <script src="js/ecg.js"></script>
+  <script src="js/scenarios.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 </html>
