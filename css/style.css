@@ -1394,3 +1394,16 @@ footer.site-footer {
   border-radius: 12px;
   line-height: 1.65;
 }
+
+
+.case-rhythm {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--subtext);
+  line-height: 1.5;
+}
+
+.case-rhythm.hidden {
+  display: none;
+}

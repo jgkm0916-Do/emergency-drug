@@ -74,10 +74,11 @@ var scenarios = {
   cardiacArrest: [
     {
       id: "ca-vf",
-      caseLabel: "CASE 1 · VF",
-      title: "VF",
+      caseLabel: "CASE 1 · 검사실에서 발생한 심정지",
+      title: "검사실에서 발생한 심정지",
+      rhythm: "VF",
       text: "72세 남성. 검사실에서 갑자기 쓰러졌습니다. 맥박이 없고 CPR 중이며, 모니터상 VF가 확인됩니다.",
-      hr: "0",
+      hr: "분석불가",
       bp: "측정불가",
       spo2: "—",
       ecgBeatWidth: 120,
@@ -114,10 +115,11 @@ var scenarios = {
     },
     {
       id: "ca-pvt",
-      caseLabel: "CASE 2 · Pulseless VT",
-      title: "Pulseless VT",
+      caseLabel: "CASE 2 · 병실에서 발생한 무맥성 심실빈맥",
+      title: "병실에서 발생한 무맥성 심실빈맥",
+      rhythm: "Pulseless VT",
       text: "68세 환자. 의식 소실, 맥박 없음. 모니터상 pulseless VT가 확인되어 CPR이 진행 중입니다.",
-      hr: "0",
+      hr: "188",
       bp: "측정불가",
       spo2: "—",
       ecgBeatWidth: 150,
@@ -154,8 +156,9 @@ var scenarios = {
     },
     {
       id: "ca-pea",
-      caseLabel: "CASE 3 · PEA",
-      title: "PEA",
+      caseLabel: "CASE 3 · CPR 중 확인된 무맥성 전기활동",
+      title: "CPR 중 확인된 무맥성 전기활동",
+      rhythm: "PEA",
       text: "70세 환자. 의식·맥박이 없고 CPR 중입니다. 모니터에는 조직화된 리듬이 보이나 맥박이 만져지지 않습니다(PEA).",
       hr: "58",
       bp: "측정불가",
@@ -182,20 +185,50 @@ var scenarios = {
           "투여 후 flush와 CPR 지속을 확인하세요."
         ),
         step(
-          "STEP 3. PEA에서 간호사가 함께 확인해야 할 것은?",
-          ["가역적 원인(H’s & T’s)과 고품질 CPR 질", "즉시 Adenosine push", "Stable로 보고 경과 관찰"],
-          "가역적 원인(H’s & T’s)과 고품질 CPR 질",
-          "정답입니다. PEA는 원인 교정이 결과에 큰 영향을 줍니다.",
-          "PEA를 stable 리듬으로 오인하면 안 됩니다.",
-          "저혈량, 저산소, 산증, 고칼륨, 혈전 등 원인을 팀과 공유합니다.",
-          "약물만이 아니라 원인 탐색이 PEA의 핵심입니다."
+          "STEP 3. PEA에서 Epinephrine 투여와 함께 간호사가 추가로 수행해야 하는 것은?",
+          [
+            "CPR을 중단하고 ROSC를 반복 확인한다.",
+            "가역적 원인(H's & T's)을 확인하면서 고품질 CPR을 지속한다.",
+            "Defibrillation을 준비한다.",
+            "Amiodarone을 준비한다."
+          ],
+          "가역적 원인(H's & T's)을 확인하면서 고품질 CPR을 지속한다.",
+          "정답입니다.<br><br>" +
+            "<strong>왜 정답인가</strong><br>" +
+            "· PEA는 Non-shockable rhythm입니다.<br>" +
+            "· Defibrillation 대상이 아닙니다.<br>" +
+            "· Epinephrine 투여와 고품질 CPR이 기본입니다.<br>" +
+            "· 동시에 가역적 원인(H's & T's)을 찾아 교정해야 합니다.<br><br>" +
+            "<strong>다른 선택지가 틀린 이유</strong><br>" +
+            "· CPR을 임의로 중단하지 않습니다. ROSC 확인은 리듬 점검 주기에 맞춰 짧게 합니다.<br>" +
+            "· PEA에서는 Defibrillation을 시행하지 않습니다.<br>" +
+            "· Amiodarone은 Shockable rhythm(VF/pulseless VT)에서 사용하는 약물입니다.",
+          "다시 확인해 주세요.<br><br>" +
+            "· CPR을 임의로 중단하지 않습니다. ROSC 확인은 리듬 점검 주기에 맞춰 짧게 합니다.<br>" +
+            "· PEA에서는 Defibrillation을 시행하지 않습니다. (Non-shockable)<br>" +
+            "· Amiodarone은 Shockable rhythm(VF/pulseless VT)에서 사용하는 약물입니다.",
+          "<strong>H's & T's란?</strong> 심정지를 일으킬 수 있는 원인 목록입니다. 신규간호사는 ‘왜 심정지가 왔는지’를 팀과 함께 점검할 때 이 목록을 떠올리면 됩니다.<br><br>" +
+            "<strong>H (5가지)</strong><br>" +
+            "· Hypovolemia (저혈량)<br>" +
+            "· Hypoxia (저산소증)<br>" +
+            "· Hydrogen ion (산증)<br>" +
+            "· Hypo/Hyperkalemia (칼륨 이상)<br>" +
+            "· Hypothermia (저체온)<br><br>" +
+            "<strong>T (5가지)</strong><br>" +
+            "· Tension pneumothorax (긴장성 기흉)<br>" +
+            "· Cardiac tamponade (심장압전)<br>" +
+            "· Toxins (독성물질)<br>" +
+            "· Coronary thrombosis (급성 심근경색)<br>" +
+            "· Pulmonary thrombosis (폐색전)",
+          "핵심 기억: PEA에서는 Epinephrine 투여와 함께 고품질 CPR을 지속하고, H's & T's를 찾아 교정하는 것이 ACLS의 핵심입니다."
         )
       ]
     },
     {
       id: "ca-asystole",
-      caseLabel: "CASE 4 · Asystole",
-      title: "Asystole",
+      caseLabel: "CASE 4 · 병실에서 발생한 무수축 심정지",
+      title: "병실에서 발생한 무수축 심정지",
+      rhythm: "Asystole",
       text: "65세 환자. 병실 심정지. 모니터상 asystole, 맥박 없음. 즉시 CPR이 시작되었습니다.",
       hr: "0",
       bp: "측정불가",
@@ -238,8 +271,9 @@ var scenarios = {
   svt: [
     {
       id: "svt-stable",
-      caseLabel: "CASE 1 · Stable SVT",
-      title: "Stable SVT",
+      caseLabel: "CASE 1 · 혈역학적으로 안정된 상심실성 빈맥",
+      title: "혈역학적으로 안정된 상심실성 빈맥",
+      rhythm: "SVT (narrow-complex, regular)",
       text: "45세 환자. 두근거림만 호소, 의식 명료. HR 180, BP 118/72, SpO₂ 98%. 규칙적 좁은 QRS 빈맥.",
       hr: "180",
       bp: "118/72",
@@ -278,8 +312,9 @@ var scenarios = {
     },
     {
       id: "svt-avnrt",
-      caseLabel: "CASE 2 · AVNRT",
-      title: "AVNRT",
+      caseLabel: "CASE 2 · 갑작스런 두근거림 (AVNRT 의심)",
+      title: "갑작스런 두근거림 (AVNRT 의심)",
+      rhythm: "SVT / AVNRT",
       text: "32세 환자. 갑작스런 두근거림. HR 190, BP 122/78, 의식 명료. 규칙적 좁은 QRS로 AVNRT가 의심됩니다.",
       hr: "190",
       bp: "122/78",
@@ -318,8 +353,9 @@ var scenarios = {
     },
     {
       id: "svt-recurrent",
-      caseLabel: "CASE 3 · Recurrent SVT",
-      title: "Recurrent SVT",
+      caseLabel: "CASE 3 · 병력상 SVT가 재발한 환자",
+      title: "병력상 SVT가 재발한 환자",
+      rhythm: "SVT (narrow-complex, regular)",
       text: "39세 환자. 과거 SVT 병력. 다시 HR 170, BP 124/80, 의식 명료. 좁은 QRS 규칙 빈맥이 재발했습니다.",
       hr: "170",
       bp: "124/80",
@@ -358,8 +394,9 @@ var scenarios = {
     },
     {
       id: "svt-adenosine-fail",
-      caseLabel: "CASE 4 · Adenosine ineffective",
-      title: "Adenosine ineffective",
+      caseLabel: "CASE 4 · Adenosine 투여 후 불안정해진 빈맥",
+      title: "Adenosine 투여 후 불안정해진 빈맥",
+      rhythm: "SVT (unstable)",
       text: "50세 환자. Stable로 보여 Adenosine을 투여했으나 리듬이 지속됩니다. 이후 BP 78/42, 식은땀과 의식 저하가 나타났습니다. HR 185.",
       hr: "185",
       bp: "78/42",
@@ -402,8 +439,9 @@ var scenarios = {
   bradycardia: [
     {
       id: "brady-symptomatic",
-      caseLabel: "CASE 1 · Symptomatic bradycardia",
-      title: "Symptomatic bradycardia",
+      caseLabel: "CASE 1 · 어지럼·저혈압을 동반한 서맥",
+      title: "어지럼·저혈압을 동반한 서맥",
+      rhythm: "Sinus bradycardia",
       text: "79세 환자. HR 34, BP 84/50, 어지럼·식은땀. 고칼륨 소견은 없습니다.",
       hr: "34",
       bp: "84/50",
@@ -442,8 +480,9 @@ var scenarios = {
     },
     {
       id: "brady-inferior-mi",
-      caseLabel: "CASE 2 · Inferior MI",
-      title: "Inferior MI",
+      caseLabel: "CASE 2 · 하벽심근경색이 의되는 서맥",
+      title: "하벽심근경색이 의심되는 서맥",
+      rhythm: "Bradycardia",
       text: "66세 환자. 하벽심근경색 의심. HR 38, BP 86/52, 오심·식은땀. 서맥이 동반됩니다.",
       hr: "38",
       bp: "86/52",
@@ -482,8 +521,9 @@ var scenarios = {
     },
     {
       id: "brady-drug-induced",
-      caseLabel: "CASE 3 · Drug induced",
-      title: "Drug induced",
+      caseLabel: "CASE 3 · 약제 관련 서맥이 의심되는 환자",
+      title: "약제 관련 서맥이 의심되는 환자",
+      rhythm: "Bradycardia",
       text: "78세 환자. 베타차단제 복용 중 HR 40, BP 88/54, 무기력. 약물 유발 서맥이 의심됩니다.",
       hr: "40",
       bp: "88/54",
@@ -522,8 +562,9 @@ var scenarios = {
     },
     {
       id: "brady-av-block",
-      caseLabel: "CASE 4 · Complete AV block",
-      title: "Complete AV block",
+      caseLabel: "CASE 4 · 고도 방실차단이 의심되는 서맥",
+      title: "고도 방실차단이 의심되는 서맥",
+      rhythm: "Complete AV block",
       text: "81세 환자. Complete AV block 의심. HR 32, BP 80/48, 어지럼·처짐. SpO₂ 93%.",
       hr: "32",
       bp: "80/48",
@@ -566,8 +607,9 @@ var scenarios = {
   shock: [
     {
       id: "shock-septic",
-      caseLabel: "CASE 1 · Septic shock",
-      title: "Septic shock",
+      caseLabel: "CASE 1 · 수액 후에도 지속되는 패혈성 쇼크",
+      title: "수액 후에도 지속되는 패혈성 쇼크",
+      rhythm: "Sinus tachycardia",
       text: "67세 폐렴 환자. 수액 소생 후에도 BP 78/40, HR 122, 사지 냉감, lactate 상승.",
       hr: "122",
       bp: "78/40",
@@ -606,8 +648,9 @@ var scenarios = {
     },
     {
       id: "shock-persistent",
-      caseLabel: "CASE 2 · Persistent hypotension",
-      title: "Persistent hypotension",
+      caseLabel: "CASE 2 · 감염 치료 중 지속되는 저혈압",
+      title: "감염 치료 중 지속되는 저혈압",
+      rhythm: "Sinus tachycardia",
       text: "74세 요로패혈증. 항생제·수액 후에도 BP 80/46, HR 110. 의식이 다소 처집니다.",
       hr: "110",
       bp: "80/46",
@@ -646,8 +689,9 @@ var scenarios = {
     },
     {
       id: "shock-map",
-      caseLabel: "CASE 3 · MAP 감소",
-      title: "MAP 감소",
+      caseLabel: "CASE 3 · MAP가 크게 감소한 쇼크",
+      title: "MAP가 크게 감소한 쇼크",
+      rhythm: "Sinus tachycardia",
       text: "62세 감염 의심. BP 70/38로 MAP가 크게 감소, HR 128, SpO₂ 92%. 사지가 찹니다.",
       hr: "128",
       bp: "70/38",
@@ -686,8 +730,9 @@ var scenarios = {
     },
     {
       id: "shock-perfusion",
-      caseLabel: "CASE 4 · Poor perfusion",
-      title: "Poor perfusion",
+      caseLabel: "CASE 4 · 말초 관류 저하가 뚜렷한 쇼크",
+      title: "말초 관류 저하가 뚜렷한 쇼크",
+      rhythm: "Sinus tachycardia",
       text: "팀 브리핑: 수액 후에도 MAP가 안 오르고 말초 관류가 불량한 septic shock. HR 118, BP 76/42.",
       hr: "118",
       bp: "76/42",
@@ -730,8 +775,9 @@ var scenarios = {
   hyperkalemia: [
     {
       id: "hk-no-ecg",
-      caseLabel: "CASE 1 · ECG 변화 없음",
-      title: "ECG 변화 없음",
+      caseLabel: "CASE 1 · ECG 변화 없는 고칼륨혈증",
+      title: "ECG 변화 없는 고칼륨혈증",
+      rhythm: "Sinus rhythm",
       text: "60세 CKD 환자. K 6.1. HR 78, BP 128/76. ECG에서 뚜렷한 전도장애·peaked T는 없습니다. 의식 명료.",
       hr: "78",
       bp: "128/76",
@@ -770,8 +816,9 @@ var scenarios = {
     },
     {
       id: "hk-tall-t",
-      caseLabel: "CASE 2 · Tall T wave",
-      title: "Tall T wave",
+      caseLabel: "CASE 2 · Peaked T wave가 동반된 고칼륨혈증",
+      title: "Peaked T wave가 동반된 고칼륨혈증",
+      rhythm: "Sinus bradycardia with peaked T",
       text: "82세 CKD 환자. K 7.2, HR 38, BP 88/50. ECG에서 tall/peaked T wave가 관찰됩니다.",
       hr: "38",
       bp: "88/50",
@@ -810,8 +857,9 @@ var scenarios = {
     },
     {
       id: "hk-wide-qrs",
-      caseLabel: "CASE 3 · Wide QRS",
-      title: "Wide QRS",
+      caseLabel: "CASE 3 · QRS 확장이 동반된 고칼륨혈증",
+      title: "QRS 확장이 동반된 고칼륨혈증",
+      rhythm: "Wide QRS (hyperkalemia pattern)",
       text: "70세 환자. K 7.6, HR 42, BP 86/50. ECG에서 peaked T와 함께 QRS가 넓어져 있습니다.",
       hr: "42",
       bp: "86/50",
@@ -850,8 +898,9 @@ var scenarios = {
     },
     {
       id: "hk-dialysis",
-      caseLabel: "CASE 4 · Dialysis patient",
-      title: "Dialysis patient",
+      caseLabel: "CASE 4 · 투석 지연 환자의 중증 고칼륨혈증",
+      title: "투석 지연 환자의 중증 고칼륨혈증",
+      rhythm: "Sinus bradycardia with peaked T",
       text: "55세 유지투석 환자. 투석 지연. K 7.8, peaked T·QRS 확장 의심. HR 46, BP 92/58.",
       hr: "46",
       bp: "92/58",

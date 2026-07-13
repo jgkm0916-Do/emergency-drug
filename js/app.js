@@ -336,10 +336,20 @@ function loadQuestion() {
     " / " +
     scenario.steps.length;
 
-  var titleText = scenario.caseLabel
-    ? scenario.caseLabel + " — " + scenario.title
-    : scenario.title;
-  document.getElementById("caseTitle").innerText = titleText;
+  document.getElementById("caseTitle").innerText =
+    scenario.caseLabel || scenario.title || "";
+
+  var rhythmEl = document.getElementById("caseRhythm");
+  if (rhythmEl) {
+    if (scenario.rhythm) {
+      rhythmEl.textContent = "확인된 리듬: " + scenario.rhythm;
+      rhythmEl.classList.remove("hidden");
+    } else {
+      rhythmEl.textContent = "";
+      rhythmEl.classList.add("hidden");
+    }
+  }
+
   document.getElementById("caseText").innerText = scenario.text;
   document.getElementById("hr").innerText = scenario.hr;
   document.getElementById("bp").innerText = scenario.bp;
