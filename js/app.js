@@ -1,36 +1,345 @@
-/* 퀴즈 진행, 탭 전환, 점수 계산, 화면 제어 */
+/* 퀴즈 진행, 카테고리 허브, 진행률, 점수 계산, 화면 제어 */
 
+var SESSION_CASE_COUNT = 5;
+var PROGRESS_KEY = "emergencyDrugSimProgress_v1";
+
+var activeScenarios = [];
 var currentScenarioIndex = 0;
 var currentStepIndex = 0;
 var score = 0;
 var answered = false;
+var wrongSteps = [];
+var currentMode = null; /* { type: 'category'|'comprehensive', categoryId: string } */
+var completedCaseIdsThisSession = [];
 
-function startGame() {
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.add("hidden");
-  document.getElementById("drugCards").classList.add("hidden");
-  document.getElementById("studyScreen").classList.add("hidden");
-  var ecartEl = document.getElementById("ecartScreen");
-  if (ecartEl) ecartEl.classList.add("hidden");
+/* ---------- icons (Lucide-style SVG) ---------- */
+var QUIZ_ICONS = {
+  heart:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+  zap:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>',
+  activity:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+  droplet:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>',
+  flask:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>',
+  trophy:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>',
+  arrow:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>'
+};
+
+/* ---------- progress ---------- */
+function loadProgress() {
+  try {
+    var raw = localStorage.getItem(PROGRESS_KEY);
+    if (!raw) return {};
+    var parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveProgress(data) {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+  } catch (e) {
+    /* ignore quota / private mode */
+  }
+}
+
+function getCompletedSet(categoryId) {
+  var all = loadProgress();
+  var list = all[categoryId] || [];
+  var map = {};
+  list.forEach(function (id) {
+    map[id] = true;
+  });
+  return map;
+}
+
+function markCasesCompleted(categoryId, caseIds) {
+  if (!categoryId || categoryId === "comprehensive") return;
+  var all = loadProgress();
+  var set = getCompletedSet(categoryId);
+  caseIds.forEach(function (id) {
+    set[id] = true;
+  });
+  all[categoryId] = Object.keys(set);
+  saveProgress(all);
+}
+
+function getCategoryProgress(categoryId) {
+  var cases = getCategoryCases(categoryId);
+  var doneMap = getCompletedSet(categoryId);
+  var done = 0;
+  cases.forEach(function (c) {
+    if (doneMap[c.id]) done++;
+  });
+  return { done: done, total: cases.length };
+}
+
+function starsHtml(done, total) {
+  var html = "";
+  for (var i = 0; i < total; i++) {
+    html += i < done ? "★" : "☆";
+  }
+  return html;
+}
+
+/* ---------- shuffle / session ---------- */
+function shuffleArray(array) {
+  var arr = array.slice();
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+  return arr;
+}
+
+function getTotalSteps(list) {
+  return list.reduce(function (n, s) {
+    return n + (s.steps ? s.steps.length : 0);
+  }, 0);
+}
+
+function getActiveScenario() {
+  return activeScenarios[currentScenarioIndex];
+}
+
+function hideAllMainScreens() {
+  [
+    "startScreen",
+    "quizHubScreen",
+    "gameScreen",
+    "finishScreen",
+    "drugCards",
+    "studyScreen",
+    "ecartScreen"
+  ].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add("hidden");
+  });
+}
+
+/* ---------- quiz hub ---------- */
+function showQuizHub() {
+  hideAllMainScreens();
+  var hub = document.getElementById("quizHubScreen");
+  if (hub) hub.classList.remove("hidden");
+  renderQuizCategories();
+}
+
+function renderQuizCategories() {
+  var grid = document.getElementById("quizCategoryGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  CATEGORY_META.forEach(function (meta, index) {
+    var progress = getCategoryProgress(meta.id);
+    grid.appendChild(
+      buildCategoryCard(meta, progress, function () {
+        startCategorySimulation(meta.id);
+      }, "cat-" + index)
+    );
+  });
+
+  grid.appendChild(
+    buildCategoryCard(
+      COMPREHENSIVE_META,
+      { done: null, total: COMPREHENSIVE_META.caseCount },
+      function () {
+        startComprehensiveEvaluation();
+      },
+      "comprehensive"
+    )
+  );
+}
+
+function buildCategoryCard(meta, progress, onClick, toneClass) {
+  var btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "home-tile quiz-cat-tile quiz-cat-tile--" + (toneClass || "default");
+  btn.onclick = onClick;
+
+  var iconWrap = document.createElement("span");
+  iconWrap.className = "tile-icon";
+  iconWrap.setAttribute("aria-hidden", "true");
+  iconWrap.innerHTML = QUIZ_ICONS[meta.icon] || QUIZ_ICONS.heart;
+
+  var body = document.createElement("span");
+  body.className = "tile-body";
+
+  var title = document.createElement("span");
+  title.className = "tile-title";
+  title.textContent = meta.shortTitle || meta.title;
+
+  var sub = document.createElement("span");
+  sub.className = "tile-sub";
+  if (progress.done == null) {
+    sub.textContent =
+      COMPREHENSIVE_META.caseCount +
+      " CASE · " +
+      (meta.description || "");
+  } else {
+    sub.innerHTML =
+      '<span class="quiz-progress-line">' +
+      progress.done +
+      " / " +
+      progress.total +
+      " 완료</span>" +
+      '<span class="quiz-stars" aria-hidden="true">' +
+      starsHtml(progress.done, progress.total) +
+      "</span>" +
+      '<span class="quiz-desc">' +
+      (meta.description || "") +
+      "</span>";
+  }
+
+  body.appendChild(title);
+  body.appendChild(sub);
+
+  var arrow = document.createElement("span");
+  arrow.className = "tile-arrow";
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.innerHTML = QUIZ_ICONS.arrow;
+
+  btn.appendChild(iconWrap);
+  btn.appendChild(body);
+  btn.appendChild(arrow);
+  return btn;
+}
+
+/* ---------- start modes ---------- */
+function startCategorySimulation(categoryId) {
+  var cases = getCategoryCases(categoryId);
+  if (!cases.length) return;
+
+  currentMode = { type: "category", categoryId: categoryId };
+  beginSimulationSession(cases.slice());
+}
+
+function startComprehensiveEvaluation() {
+  var pool = getAllScenariosFlat();
+  var take = Math.min(SESSION_CASE_COUNT, pool.length);
+  currentMode = { type: "comprehensive", categoryId: "comprehensive" };
+  beginSimulationSession(shuffleArray(pool).slice(0, take));
+}
+
+function beginSimulationSession(caseList) {
+  hideAllMainScreens();
   document.getElementById("gameScreen").classList.remove("hidden");
 
+  activeScenarios = caseList;
   currentScenarioIndex = 0;
   currentStepIndex = 0;
   score = 0;
+  answered = false;
+  wrongSteps = [];
+  completedCaseIdsThisSession = [];
 
   loadQuestion();
+}
+
+function retryCurrentMode() {
+  if (!currentMode) {
+    showQuizHub();
+    return;
+  }
+  if (currentMode.type === "comprehensive") {
+    startComprehensiveEvaluation();
+  } else {
+    startCategorySimulation(currentMode.categoryId);
+  }
+}
+
+function goNextCategory() {
+  if (!currentMode || currentMode.type !== "category") {
+    showQuizHub();
+    return;
+  }
+  var idx = -1;
+  for (var i = 0; i < CATEGORY_META.length; i++) {
+    if (CATEGORY_META[i].id === currentMode.categoryId) {
+      idx = i;
+      break;
+    }
+  }
+  if (idx >= 0 && idx < CATEGORY_META.length - 1) {
+    startCategorySimulation(CATEGORY_META[idx + 1].id);
+  } else {
+    showQuizHub();
+  }
+}
+
+/* 기존 호환 */
+function startSimulation() {
+  showQuizHub();
+}
+
+function restartSimulation() {
+  retryCurrentMode();
+}
+
+function startGame() {
+  showQuizHub();
+}
+
+function restartGame() {
+  retryCurrentMode();
+}
+
+/* ---------- question flow ---------- */
+function formatFeedback(step, isCorrect) {
+  var html = "";
+  if (isCorrect) {
+    html += "<strong>정답</strong><br>" + step.correct;
+  } else {
+    html +=
+      "<strong>다시 확인</strong><br>" +
+      step.wrong +
+      "<br><br>정답: <strong>" +
+      step.answer +
+      "</strong>";
+  }
+  if (step.rationale) {
+    html += "<br><br><strong>근거</strong><br>" + step.rationale;
+  }
+  if (step.learningPoint) {
+    html += "<br><br><strong>학습 포인트</strong><br>" + step.learningPoint;
+  }
+  return html;
 }
 
 function loadQuestion() {
   answered = false;
 
-  var scenario = scenarios[currentScenarioIndex];
+  var scenario = getActiveScenario();
+  if (!scenario) {
+    finishGame();
+    return;
+  }
+
   var step = scenario.steps[currentStepIndex];
 
   document.getElementById("progressText").innerText =
-    "CASE " + (currentScenarioIndex + 1) + " / " + scenarios.length + " · STEP " + (currentStepIndex + 1) + " / " + scenario.steps.length;
+    "CASE " +
+    (currentScenarioIndex + 1) +
+    " / " +
+    activeScenarios.length +
+    " · STEP " +
+    (currentStepIndex + 1) +
+    " / " +
+    scenario.steps.length;
 
-  document.getElementById("caseTitle").innerText = scenario.title;
+  var titleText = scenario.caseLabel
+    ? scenario.caseLabel + " — " + scenario.title
+    : scenario.title;
+  document.getElementById("caseTitle").innerText = titleText;
   document.getElementById("caseText").innerText = scenario.text;
   document.getElementById("hr").innerText = scenario.hr;
   document.getElementById("bp").innerText = scenario.bp;
@@ -40,6 +349,7 @@ function loadQuestion() {
   document.getElementById("questionText").innerText = step.question;
 
   var optionsBox = document.getElementById("optionsBox");
+  optionsBox.classList.remove("is-answered");
   optionsBox.innerHTML = "";
 
   step.options.forEach(function (option) {
@@ -47,7 +357,7 @@ function loadQuestion() {
     btn.className = "option-btn";
     btn.innerText = option;
     btn.onclick = function () {
-      checkAnswer(option);
+      checkAnswer(option, btn);
     };
     optionsBox.appendChild(btn);
   });
@@ -59,36 +369,61 @@ function loadQuestion() {
   var nextBtn = document.getElementById("nextBtn");
   nextBtn.classList.add("hidden");
 
-  if (currentStepIndex < scenario.steps.length - 1) {
+  var isLastStep = currentStepIndex >= scenario.steps.length - 1;
+  var isLastCase = currentScenarioIndex >= activeScenarios.length - 1;
+
+  if (!isLastStep) {
     nextBtn.innerText = "다음 STEP";
-  } else {
+  } else if (!isLastCase) {
     nextBtn.innerText = "다음 CASE";
+  } else {
+    nextBtn.innerText = "결과 보기";
   }
 }
 
-function checkAnswer(selected) {
+function checkAnswer(selected, clickedBtn) {
   if (answered) return;
   answered = true;
 
-  var scenario = scenarios[currentScenarioIndex];
-  var step = scenario.steps[currentStepIndex];
+  var scenario = getActiveScenario();
+  var stepItem = scenario.steps[currentStepIndex];
   var resultBox = document.getElementById("resultBox");
+  var optionButtons = document.querySelectorAll("#optionsBox .option-btn");
 
-  if (selected === step.answer) {
+  optionButtons.forEach(function (btn) {
+    if (btn.innerText === stepItem.answer) {
+      btn.classList.add("is-correct");
+    } else if (btn === clickedBtn) {
+      btn.classList.add("is-wrong");
+    }
+  });
+
+  if (clickedBtn) clickedBtn.classList.add("is-selected");
+
+  var isCorrect = selected === stepItem.answer;
+
+  if (isCorrect) {
     score++;
     resultBox.className = "result correct";
-    resultBox.innerHTML = "✅ <strong>정답!</strong><br>" + step.correct;
   } else {
     resultBox.className = "result wrong";
-    resultBox.innerHTML = "🚨 <strong>다시 확인!</strong><br>" + step.wrong + "<br><br>정답: <strong>" + step.answer + "</strong>";
+    wrongSteps.push({
+      caseTitle: scenario.title,
+      caseLabel: scenario.caseLabel || scenario.title,
+      step: currentStepIndex + 1,
+      question: stepItem.question,
+      answer: stepItem.answer
+    });
   }
 
+  resultBox.innerHTML = formatFeedback(stepItem, isCorrect);
   resultBox.style.display = "block";
+  document.getElementById("optionsBox").classList.add("is-answered");
   document.getElementById("nextBtn").classList.remove("hidden");
 }
 
 function nextQuestion() {
-  var scenario = scenarios[currentScenarioIndex];
+  var scenario = getActiveScenario();
 
   if (currentStepIndex < scenario.steps.length - 1) {
     currentStepIndex++;
@@ -96,10 +431,15 @@ function nextQuestion() {
     return;
   }
 
+  /* CASE 완료 */
+  if (scenario.id) {
+    completedCaseIdsThisSession.push(scenario.id);
+  }
+
   currentScenarioIndex++;
   currentStepIndex = 0;
 
-  if (currentScenarioIndex < scenarios.length) {
+  if (currentScenarioIndex < activeScenarios.length) {
     loadQuestion();
   } else {
     finishGame();
@@ -110,43 +450,86 @@ function finishGame() {
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("finishScreen").classList.remove("hidden");
 
-  var totalSteps = scenarios.reduce(function (n, s) {
-    return n + s.steps.length;
-  }, 0);
-
-  document.getElementById("finalScore").innerText =
-    "최종 점수: " + score + " / " + totalSteps;
-
-  var message = "";
-
-  if (score === totalSteps) {
-    message = "완벽합니다. 응급상황에서 약물 선택 판단이 매우 좋습니다.";
-  } else if (score >= Math.ceil(totalSteps * 0.66)) {
-    message = "좋습니다. 헷갈린 약물만 다시 확인하면 실제 상황에서 더 자신 있게 대응할 수 있습니다.";
-  } else {
-    message = "응급약물은 반복 학습이 중요합니다. 약물 카드를 확인한 뒤 다시 도전해보세요.";
+  if (currentMode && currentMode.type === "category") {
+    markCasesCompleted(currentMode.categoryId, completedCaseIdsThisSession);
   }
 
+  var totalSteps = getTotalSteps(activeScenarios);
+  var caseCount = activeScenarios.length;
+  var rate = totalSteps > 0 ? Math.round((score / totalSteps) * 100) : 0;
+
+  document.getElementById("finalScore").innerHTML =
+    "정답률: " +
+    rate +
+    "% (" +
+    score +
+    " / " +
+    totalSteps +
+    " STEP)" +
+    "<br>완료 CASE: " +
+    caseCount;
+
+  var wrongEl = document.getElementById("finalWrongSteps");
+  if (wrongEl) {
+    if (!wrongSteps.length) {
+      wrongEl.innerHTML = "<strong>틀린 STEP</strong><br>없습니다.";
+    } else {
+      var lines = wrongSteps.map(function (w) {
+        return (
+          "· " +
+          w.caseLabel +
+          " / STEP " +
+          w.step +
+          " — 정답: " +
+          w.answer
+        );
+      });
+      wrongEl.innerHTML =
+        "<strong>틀린 STEP (" +
+        wrongSteps.length +
+        ")</strong><br>" +
+        lines.join("<br>");
+    }
+  }
+
+  var message = "";
+  if (totalSteps > 0 && score === totalSteps) {
+    message = "완벽합니다. 해당 상황의 약물 선택 판단이 매우 좋습니다.";
+  } else if (score >= Math.ceil(totalSteps * 0.66)) {
+    message = "좋습니다. 틀린 STEP을 복습하면 더 자신 있게 대응할 수 있습니다.";
+  } else {
+    message = "기초 학습·상황별 참고를 확인한 뒤 같은 카테고리를 다시 풀어보세요.";
+  }
   document.getElementById("finalMessage").innerText = message;
+
+  var nextBtn = document.getElementById("finishNextBtn");
+  if (nextBtn) {
+    if (currentMode && currentMode.type === "category") {
+      nextBtn.classList.remove("hidden");
+      var idx = -1;
+      for (var i = 0; i < CATEGORY_META.length; i++) {
+        if (CATEGORY_META[i].id === currentMode.categoryId) {
+          idx = i;
+          break;
+        }
+      }
+      nextBtn.textContent =
+        idx >= 0 && idx < CATEGORY_META.length - 1
+          ? "다음 카테고리"
+          : "카테고리 목록";
+    } else {
+      nextBtn.classList.add("hidden");
+    }
+  }
 }
 
-function restartGame() {
-  startGame();
-}
-
+/* ---------- tabs ---------- */
 function showDrugCards() {
   showTab("drug");
 }
 
 function showTab(tab) {
-
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.add("hidden");
-  document.getElementById("drugCards").classList.add("hidden");
-  document.getElementById("studyScreen").classList.add("hidden");
-  var ecartScreen = document.getElementById("ecartScreen");
-  if (ecartScreen) ecartScreen.classList.add("hidden");
+  hideAllMainScreens();
 
   var pageNav = document.getElementById("pageNav");
 
@@ -158,7 +541,7 @@ function showTab(tab) {
   }
 
   if (tab === "quiz") {
-    startGame();
+    showQuizHub();
   }
 
   if (tab === "drug") {
@@ -170,9 +553,9 @@ function showTab(tab) {
   }
 
   if (tab === "ecart") {
-    document.getElementById("ecartScreen").classList.remove("hidden");
+    var ecart = document.getElementById("ecartScreen");
+    if (ecart) ecart.classList.remove("hidden");
   }
-
 }
 
 function toggleDrugDetail(button) {
