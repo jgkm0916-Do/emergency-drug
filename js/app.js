@@ -10,6 +10,8 @@ function startGame() {
   document.getElementById("finishScreen").classList.add("hidden");
   document.getElementById("drugCards").classList.add("hidden");
   document.getElementById("studyScreen").classList.add("hidden");
+  var ecartEl = document.getElementById("ecartScreen");
+  if (ecartEl) ecartEl.classList.add("hidden");
   document.getElementById("gameScreen").classList.remove("hidden");
 
   currentScenarioIndex = 0;
@@ -143,6 +145,8 @@ function showTab(tab) {
   document.getElementById("finishScreen").classList.add("hidden");
   document.getElementById("drugCards").classList.add("hidden");
   document.getElementById("studyScreen").classList.add("hidden");
+  var ecartScreen = document.getElementById("ecartScreen");
+  if (ecartScreen) ecartScreen.classList.add("hidden");
 
   var pageNav = document.getElementById("pageNav");
 
@@ -165,6 +169,10 @@ function showTab(tab) {
     document.getElementById("studyScreen").classList.remove("hidden");
   }
 
+  if (tab === "ecart") {
+    document.getElementById("ecartScreen").classList.remove("hidden");
+  }
+
 }
 
 function toggleDrugDetail(button) {
@@ -181,5 +189,22 @@ function toggleDrugDetail(button) {
     detail.classList.remove("hidden");
     button.setAttribute("aria-expanded", "true");
     button.textContent = "투여방법 및 상세정보 닫기";
+  }
+}
+
+function togglePediatric(button) {
+  var body = button.nextElementSibling;
+  if (!body || !body.classList.contains("pediatric-body")) return;
+
+  var isOpen = !body.classList.contains("hidden");
+
+  if (isOpen) {
+    body.classList.add("hidden");
+    button.setAttribute("aria-expanded", "false");
+    button.textContent = "③ Pediatric 보기";
+  } else {
+    body.classList.remove("hidden");
+    button.setAttribute("aria-expanded", "true");
+    button.textContent = "③ Pediatric 접기";
   }
 }

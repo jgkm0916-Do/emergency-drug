@@ -638,20 +638,7 @@
   font-style: italic;
 }
 
-.scenario-flow {
-  display: grid;
-  gap: 10px;
-  font-size: 14px;
-  line-height: 1.5;
-}
 
-.scenario-flow p {
-  margin: 0;
-  padding: 10px 12px;
-  background: #f8fafc;
-  border-radius: 12px;
-  border-left: 4px solid #991b1b;
-}
 
 @media (max-width: 900px) {
   .home-grid {
@@ -666,7 +653,8 @@
 
   .drug-info,
   .drug-detail,
-  .scenario-flow {
+  .cheat-list li,
+  .cheat-memory {
     font-size: 13px;
   }
 
@@ -675,16 +663,365 @@
     padding: 11px 12px;
   }
 
-  .scenario-card {
-    padding: 18px 14px;
-  }
 
-  .scenario-flow p {
-    padding: 9px 10px;
-  }
 
   .info-label {
     display: block;
     margin-bottom: 4px;
+  }
+}
+
+.cheat-lead {
+  margin-bottom: 18px;
+}
+
+.scenario-card.cheat-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 22px 20px 18px;
+  margin-top: 22px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.scenario-card.cheat-card h3 {
+  margin: 0 0 16px;
+  color: #991b1b;
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.cheat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cheat-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  min-height: 120px;
+}
+
+.cheat-box h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.drug-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+.drug-badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.code-badge {
+  display: inline-block;
+  min-width: 4.5em;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.code-badge--primary {
+  background: #b91c1c;
+}
+
+.code-badge--secondary {
+  background: #ea580c;
+}
+
+.drug-badge-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  padding-left: 2px;
+}
+
+.cheat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.cheat-list li {
+  position: relative;
+  padding-left: 1.15em;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.35;
+}
+
+.cheat-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #15803d;
+  font-size: 12px;
+}
+
+.cheat-memory {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: #fef9c3;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  color: #78350f;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+@media (max-width: 700px) {
+  .cheat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-card.cheat-card {
+    padding: 16px 14px 14px;
+  }
+
+  .scenario-card.cheat-card h3 {
+    font-size: 18px;
+  }
+
+  .cheat-box {
+    min-height: auto;
+    padding: 12px;
+  }
+
+  .code-badge {
+    font-size: 15px;
+    padding: 7px 10px;
+  }
+
+  .cheat-list li {
+    font-size: 13px;
+  }
+
+  .cheat-memory {
+    font-size: 13px;
+    padding: 11px 12px;
+  }
+}
+
+.detail-section {
+  margin-top: 10px;
+}
+
+.detail-list {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.detail-list li {
+  position: relative;
+  padding-left: 0.9em;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.detail-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #991b1b;
+}
+
+.pediatric-toggle-btn {
+  width: 100%;
+  margin-top: 4px;
+  background: #e2e8f0;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+
+.pediatric-toggle-btn:hover {
+  background: #cbd5e1;
+}
+
+.pediatric-toggle-btn[aria-expanded="true"] {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.pediatric-body {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+}
+
+.pediatric-body.hidden {
+  display: none;
+}
+
+.source-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  vertical-align: middle;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.source-tag--ref {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.protocol-note {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.drug-detail .cheat-list li::before {
+  content: "✔";
+  color: #15803d;
+  font-size: 11px;
+}
+
+.home-grid--4 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.home-tile--ecart {
+  background: linear-gradient(145deg, #0369a1, #0c4a6e);
+}
+
+.ecart-note {
+  margin: 0 0 16px;
+}
+
+.ecart-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+.ecart-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+.ecart-table th {
+  background: #1e293b;
+  color: #f8fafc;
+  text-align: left;
+  padding: 11px 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.ecart-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+  line-height: 1.45;
+  color: #1e293b;
+}
+
+.ecart-table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.ecart-table tbody tr:hover {
+  background: #eff6ff;
+}
+
+.ecart-code {
+  display: inline-block;
+  background: #b91c1c;
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.ecart-code--muted {
+  background: #94a3b8;
+}
+
+.inline-link-btn {
+  display: inline;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: #1d4ed8;
+  font-size: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.inline-link-btn:hover {
+  color: #1e3a8a;
+  transform: none;
+}
+
+@media (max-width: 900px) {
+  .home-grid--4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .ecart-table {
+    font-size: 12px;
+    min-width: 640px;
+  }
+
+  .ecart-table th,
+  .ecart-table td {
+    padding: 9px 10px;
   }
 }
