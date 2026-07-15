@@ -27,8 +27,202 @@ var QUIZ_ICONS = {
   trophy:
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>',
   arrow:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>'
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
+  lightbulb:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>'
 };
+
+/* ---------- Mini Clinical Guide (Clinical Pearl) ----------
+ * Extensible: add objects to CLINICAL_PEARLS.
+ * Future: pick random pearl / filter by drug id.
+ * Schema:
+ * {
+ *   id, label, topic, drug,
+ *   symptoms: { title, items[] },
+ *   ecg: { title, caption, kind: 'tall-t' },
+ *   priorityDrug: { title, name, strength, dose, route },
+ *   remember: { title, text }
+ * }
+ */
+var CLINICAL_PEARLS = [
+  {
+    id: "hyperkalemia-calcium",
+    label: "Clinical Pearl",
+    topic: "Hyperkalemia",
+    drug: "Calcium gluconate",
+    symptoms: {
+      title: "환자가 이런 증상을 보이면",
+      items: ["근력 저하", "감각 이상", "오심", "서맥"]
+    },
+    ecg: {
+      title: "ECG 특징",
+      caption: "Tall T wave",
+      kind: "tall-t"
+    },
+    priorityDrug: {
+      title: "우선 약물",
+      name: "Calcium gluconate",
+      strength: "10%",
+      dose: "1g",
+      route: "IV slow"
+    },
+    remember: {
+      title: "반드시 기억할 것",
+      text:
+        "Calcium은 칼륨을 제거하는 약물이 아니라 심근세포막을 안정화하는 약물이다."
+    }
+  }
+];
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function getEcgIllustrationSvg(kind) {
+  if (kind === "tall-t") {
+    return (
+      '<svg viewBox="0 0 240 56" aria-hidden="true">' +
+      '<path d="M4 32 H40 L48 32 L56 24 L64 40 L72 32 H100 L108 32 L116 8 L124 48 L132 32 H170 L178 32 L186 20 L194 44 L202 32 H236" ' +
+      'fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<text x="116" y="14" fill="#94a3b8" font-size="8" font-family="Pretendard,sans-serif">Tall T</text>' +
+      "</svg>"
+    );
+  }
+  return (
+    '<svg viewBox="0 0 240 56" aria-hidden="true">' +
+    '<path d="M4 28 H236" fill="none" stroke="#64748b" stroke-width="1.5"/>' +
+    "</svg>"
+  );
+}
+
+function pickClinicalPearl() {
+  var list = CLINICAL_PEARLS || [];
+  if (!list.length) return null;
+  /* Home shows one; swap index / Math.random later for rotation */
+  return list[0];
+}
+
+function renderMiniClinicalGuide(pearl) {
+  if (!pearl) return "";
+
+  var symptoms = pearl.symptoms || { title: "", items: [] };
+  var items = (symptoms.items || [])
+    .map(function (item) {
+      return "<li>" + escapeHtml(item) + "</li>";
+    })
+    .join("");
+
+  var ecg = pearl.ecg || {};
+  var drug = pearl.priorityDrug || {};
+  var remember = pearl.remember || {};
+
+  return (
+    '<article class="mcg" data-pearl-id="' +
+    escapeHtml(pearl.id || "") +
+    '">' +
+    '<header class="mcg-head">' +
+    '<div class="mcg-brand">' +
+    '<span class="mcg-brand-icon" aria-hidden="true">' +
+    QUIZ_ICONS.lightbulb +
+    "</span>" +
+    escapeHtml(pearl.label || "Clinical Pearl") +
+    "</div>" +
+    '<div class="mcg-tags">' +
+    (pearl.topic
+      ? '<span class="mcg-tag">' + escapeHtml(pearl.topic) + "</span>"
+      : "") +
+    (pearl.drug
+      ? '<span class="mcg-tag mcg-tag--drug">' +
+        escapeHtml(pearl.drug) +
+        "</span>"
+      : "") +
+    "</div>" +
+    "</header>" +
+    '<div class="mcg-body">' +
+    '<section class="mcg-section">' +
+    '<h3 class="mcg-section-label"><span>1</span>' +
+    escapeHtml(symptoms.title || "증상") +
+    "</h3>" +
+    '<ul class="mcg-list">' +
+    items +
+    "</ul>" +
+    "</section>" +
+    '<section class="mcg-section">' +
+    '<h3 class="mcg-section-label"><span>2</span>' +
+    escapeHtml(ecg.title || "ECG") +
+    "</h3>" +
+    '<div class="mcg-ecg">' +
+    '<div class="mcg-ecg-fig">' +
+    getEcgIllustrationSvg(ecg.kind || "tall-t") +
+    "</div>" +
+    '<p class="mcg-ecg-caption">' +
+    escapeHtml(ecg.caption || "") +
+    "</p>" +
+    "</div>" +
+    "</section>" +
+    '<section class="mcg-section">' +
+    '<h3 class="mcg-section-label"><span>3</span>' +
+    escapeHtml(drug.title || "우선 약물") +
+    "</h3>" +
+    '<dl class="mcg-drug">' +
+    '<dt class="mcg-drug-name">' +
+    escapeHtml(drug.name || "") +
+    "</dt>" +
+    "<dt>농도</dt><dd>" +
+    escapeHtml(drug.strength || "") +
+    "</dd>" +
+    "<dt>용량</dt><dd>" +
+    escapeHtml(drug.dose || "") +
+    "</dd>" +
+    "<dt>투여</dt><dd>" +
+    escapeHtml(drug.route || "") +
+    "</dd>" +
+    "</dl>" +
+    "</section>" +
+    '<section class="mcg-section mcg-section--remember">' +
+    '<h3 class="mcg-section-label"><span>4</span>' +
+    escapeHtml(remember.title || "반드시 기억할 것") +
+    "</h3>" +
+    '<p class="mcg-remember">' +
+    escapeHtml(remember.text || "") +
+    "</p>" +
+    "</section>" +
+    "</div>" +
+    "</article>"
+  );
+}
+
+function renderClinicalPearls() {
+  var mount = document.getElementById("clinicalPearlMount");
+  if (!mount) return;
+  var pearl = pickClinicalPearl();
+  mount.innerHTML = pearl ? renderMiniClinicalGuide(pearl) : "";
+}
+
+function updateBottomNav() {
+  /* Bottom navigation removed — kept as no-op for call sites */
+}
+
+function openCheatSection(sectionId) {
+  var targetId = sectionId || "cheat-guide";
+  showTab("drug");
+  var delay = prefersReducedMotion() ? 0 : 120;
+  window.setTimeout(function () {
+    var el = document.getElementById(targetId);
+    if (!el) el = document.getElementById("cheat-guide");
+    if (!el) el = document.getElementById("drugCards");
+    if (el && typeof el.scrollIntoView === "function") {
+      el.scrollIntoView({
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+        block: "start"
+      });
+    }
+  }, delay);
+}
 
 /* ---------- progress ---------- */
 function loadProgress() {
@@ -122,15 +316,75 @@ function hideAllMainScreens() {
     "ecartScreen"
   ].forEach(function (id) {
     var el = document.getElementById(id);
-    if (el) el.classList.add("hidden");
+    if (!el) return;
+    el.classList.add("hidden");
+    el.classList.remove("is-enter-forward", "is-enter-back");
   });
+}
+
+var currentAppTab = "home";
+var MAIN_SCREEN_IDS = [
+  "startScreen",
+  "quizHubScreen",
+  "gameScreen",
+  "finishScreen",
+  "drugCards",
+  "studyScreen",
+  "ecartScreen"
+];
+
+function getScreenIdForTab(tab) {
+  if (tab === "home") return "startScreen";
+  if (tab === "study") return "studyScreen";
+  if (tab === "drug") return "drugCards";
+  if (tab === "quiz") return "quizHubScreen";
+  if (tab === "ecart") return "ecartScreen";
+  return null;
+}
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function clearScreenEnterClasses(el) {
+  if (!el) return;
+  el.classList.remove("is-enter-forward", "is-enter-back");
+}
+
+function playScreenEnter(el, direction) {
+  if (!el) return;
+  clearScreenEnterClasses(el);
+  if (prefersReducedMotion()) return;
+
+  var cls = direction === "back" ? "is-enter-back" : "is-enter-forward";
+  // force reflow so re-triggering animation works
+  void el.offsetWidth;
+  el.classList.add(cls);
+
+  var done = function () {
+    clearScreenEnterClasses(el);
+    el.removeEventListener("animationend", done);
+  };
+  el.addEventListener("animationend", done);
+}
+
+function revealScreen(screenId, direction) {
+  hideAllMainScreens();
+  var el = document.getElementById(screenId);
+  if (!el) return;
+  el.classList.remove("hidden");
+  playScreenEnter(el, direction || "forward");
 }
 
 /* ---------- quiz hub ---------- */
 function showQuizHub() {
-  hideAllMainScreens();
-  var hub = document.getElementById("quizHubScreen");
-  if (hub) hub.classList.remove("hidden");
+  revealScreen("quizHubScreen", "forward");
+  currentAppTab = "quiz";
+  updateBottomNav("quiz");
   renderQuizCategories();
 }
 
@@ -231,8 +485,9 @@ function startComprehensiveEvaluation() {
 }
 
 function beginSimulationSession(caseList) {
-  hideAllMainScreens();
-  document.getElementById("gameScreen").classList.remove("hidden");
+  revealScreen("gameScreen", "forward");
+  currentAppTab = "quiz";
+  updateBottomNav("quiz");
 
   activeScenarios = caseList;
   currentScenarioIndex = 0;
@@ -457,8 +712,9 @@ function nextQuestion() {
 }
 
 function finishGame() {
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.remove("hidden");
+  revealScreen("finishScreen", "forward");
+  currentAppTab = "quiz";
+  updateBottomNav("quiz");
 
   if (currentMode && currentMode.type === "category") {
     markCasesCompleted(currentMode.categoryId, completedCaseIdsThisSession);
@@ -539,12 +795,11 @@ function showDrugCards() {
 }
 
 function showTab(tab) {
-  hideAllMainScreens();
-
   var pageNav = document.getElementById("pageNav");
+  var nextScreenId = getScreenIdForTab(tab);
+  var direction = tab === "home" ? "back" : "forward";
 
   if (tab === "home") {
-    document.getElementById("startScreen").classList.remove("hidden");
     pageNav.classList.add("hidden");
   } else {
     pageNav.classList.remove("hidden");
@@ -552,19 +807,20 @@ function showTab(tab) {
 
   if (tab === "quiz") {
     showQuizHub();
+    return;
   }
 
-  if (tab === "drug") {
-    document.getElementById("drugCards").classList.remove("hidden");
+  if (nextScreenId) {
+    revealScreen(nextScreenId, direction);
+  } else {
+    hideAllMainScreens();
   }
 
-  if (tab === "study") {
-    document.getElementById("studyScreen").classList.remove("hidden");
-  }
+  currentAppTab = tab;
+  updateBottomNav(tab);
 
   if (tab === "ecart") {
-    var ecart = document.getElementById("ecartScreen");
-    if (ecart) ecart.classList.remove("hidden");
+    if (typeof initEcartScreen === "function") initEcartScreen();
   }
 }
 
@@ -600,4 +856,14 @@ function togglePediatric(button) {
     button.setAttribute("aria-expanded", "true");
     button.textContent = "③ Pediatric 접기";
   }
+}
+
+function initHomeConsole() {
+  renderClinicalPearls();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initHomeConsole);
+} else {
+  initHomeConsole();
 }
