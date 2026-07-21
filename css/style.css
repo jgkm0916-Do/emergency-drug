@@ -572,25 +572,30 @@ button {
 .hero-visual {
   position: relative;
   z-index: 1;
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
+  margin-top: 2px;
+}
+
+.hero-monitor {
+  width: min(52%, 168px);
+  height: auto;
+  opacity: 0.72;
 }
 
 @media (min-width: 800px) {
   .hero-visual {
-    display: flex;
+    margin-top: 0;
+    justify-content: flex-end;
   }
-}
 
-.hero-visual-img {
-  width: 100%;
-  max-width: 340px;
-  height: auto;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  opacity: 0.95;
+  .hero-monitor {
+    width: 100%;
+    max-width: 240px;
+    opacity: 0.88;
+  }
 }
 
 .hero-title {
