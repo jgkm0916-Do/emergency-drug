@@ -65,24 +65,40 @@ var POCKET_GUIDE_DRUGS = [
     title: "Amiodarone",
     code: "MCDR",
     images: [{ src: "images/MCDR.jpg", alt: "Amiodarone" }],
-    when: ["Pulseless VT/VF", "VT", "Recurrent ventricular arrhythmia"],
+    when: ["AFib (병원 프로토콜)", "Pulseless VT/VF", "VT", "Recurrent ventricular arrhythmia"],
     purpose: ["심실성 부정맥 억제", "리듬 안정화"],
-    checklist: ["적응증 확인", "용량(300/150) 구분", "ECG · BP", "희석·속도 확인"],
+    checklist: ["적응증 확인 (AFib vs VT/VF)", "MCDR·수액 코드 확인", "ECG · BP", "Infusion rate 구간 확인"],
     admin: {
       route: "IV",
-      rate: "Bolus / Infusion (프로토콜)",
+      rate: "AFib: Loading 10min 후 24hr 구간별 infusion",
       pump: "Infusion 시 Pump 사용",
       monitoring: "ECG · BP · QT"
     },
     mix: {
       hospital: true,
-      lines: [
-        { label: "제형", value: "150mg/3ml/Amp" },
-        { label: "VF/VT 1st", value: "300mg + 5DW 20mL IV" },
-        { label: "VF/VT 2nd", value: "150mg + 5DW 20mL IV" },
-        { label: "VT", value: "150mg IV over 10 min" },
-        { label: "Infusion", value: "1mg/min 6h → 0.5mg/min" }
-      ]
+      form: "150mg/3ml/Amp (MCDR)",
+      groups: [
+        {
+          title: "AFib · 우리 병원 프로토콜",
+          subtitle: "의사 지정 투여 순서",
+          tone: "afib",
+          lines: [
+            { label: "① Loading", value: "MCDR 1@ + MNS100B (10min)" },
+            { label: "② Infusion", value: "MCDR 6@ + MNSB (24hr)" },
+            { label: "24hr rate", value: "6hr 66cc/hr → 18hr 33cc/hr" }
+          ]
+        },
+        {
+          title: "VF / VT · 심정지 투여",
+          subtitle: "Pulseless VT/VF 기준",
+          tone: "arrest",
+          lines: [
+            { label: "1st", value: "300mg + 5DW 20mL IV" },
+            { label: "2nd", value: "150mg + 5DW 20mL IV" }
+          ]
+        }
+      ],
+      note: "적응증에 맞는 구간만 확인하세요. AFib ≠ VF/VT"
     },
     cautions: ["QT prolongation", "Hypotension", "Bradycardia", "24h 총량 2.2g 초과 주의"],
     pediatric: ["병원 프로토콜·체중 기반 투여 확인"],
@@ -202,28 +218,68 @@ var POCKET_GUIDE_DRUGS = [
     title: "Dopamine Premix",
     code: "M8DOPAM / M16DOPAM",
     images: [
-      { src: "images/M8DOPAM.jpg", alt: "Dopamine Premix 800mg" },
-      { src: "images/M16DOPAM.jpg", alt: "Dopamine Premix 1600mg" }
+      { src: "images/M8DOPAM.jpg", alt: "Dopamine Premix M8DOPAM 400mg/500mL" },
+      { src: "images/M16DOPAM.jpg", alt: "Dopamine Premix M16DOPAM 800mg/500mL" }
     ],
     when: ["Severe Hypotension", "Shock"],
     purpose: ["BP 상승", "Perfusion 개선"],
-    checklist: ["800 vs 1600 농도 확인", "라벨 확인", "Infusion pump", "목표 BP"],
+    checklist: ["M8 vs M16 농도 확인", "라벨 총량(mg)·mcg/mL 확인", "Infusion pump", "목표 BP"],
     admin: {
       route: "IV infusion",
       rate: "농도에 맞춰 mL/h 환산",
-      pump: "필수",
+      pump: "필수 (추가 희석 불필요)",
       monitoring: "BP · HR · 부정맥"
     },
     mix: {
       hospital: true,
-      lines: [
-        { label: "M8DOPAM", value: "800mg/500ml/bag" },
-        { label: "M16DOPAM", value: "제품 라벨 확인" },
-        { label: "투여", value: "Infusion Pump" }
+      form: "Premix bag 500mL (추가 희석 불필요)",
+      groups: [
+        {
+          title: "M8DOPAM",
+          subtitle: "제품명 80mg = 100mL당 함량",
+          tone: "afib",
+          lines: [
+            { label: "Bag 총량", value: "400mg / 500mL" },
+            { label: "농도", value: "800 mcg/mL" },
+            { label: "특징", value: "Premix · 미세 용량 조절에 유리" }
+          ]
+        },
+        {
+          title: "M16DOPAM",
+          subtitle: "제품명 160mg = 100mL당 함량",
+          tone: "arrest",
+          lines: [
+            { label: "Bag 총량", value: "800mg / 500mL" },
+            { label: "농도", value: "1600 mcg/mL" },
+            { label: "특징", value: "Premix · M8보다 농도 2배" }
+          ]
+        }
       ],
-      note: "800mg / 1600mg 농도를 반드시 구분"
+      compare: {
+        title: "💉 M8 vs M16",
+        headers: ["M8DOPAM", "M16DOPAM"],
+        rows: [
+          ["400mg / 500mL", "800mg / 500mL"],
+          ["800 mcg/mL", "1600 mcg/mL"],
+          ["Premix", "Premix"]
+        ],
+        points: [
+          "M16 = M8의 2배 농도",
+          "같은 mL/hr에서도 투여량 2배",
+          "추가 희석 없이 Pump로 투여"
+        ],
+        warning:
+          "같은 Pump 속도라도 M16은 M8보다 도파민이 2배 투여됩니다."
+      },
+      note:
+        "제품명의 80mg/160mg은 100mL당 함량입니다. Bag 총량·mcg/mL을 라벨에서 확인하세요."
     },
-    cautions: ["농도 혼동", "Tachycardia", "Pump 없이 투여 금지"],
+    cautions: [
+      "M8/M16 농도 혼동",
+      "같은 rate로 농도 다른 bag 투여",
+      "Tachycardia",
+      "Pump 없이 투여 금지"
+    ],
     pediatric: ["체중·프로토콜 기반 투여 확인"],
     pediatricSource: "ref"
   }

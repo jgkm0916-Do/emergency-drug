@@ -107,14 +107,14 @@ body {
 /* ——— Header ——— */
 header.app-header,
 header {
-  background: var(--surface);
-  color: var(--text);
+  background: #1d4ed8;
+  color: #fff;
   padding: 0 16px;
   min-height: 64px;
   display: flex;
   align-items: center;
   text-align: left;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #1e40af;
 }
 
 .header-inner {
@@ -124,40 +124,29 @@ header {
   min-height: 64px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
 }
 
 .header-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  object-fit: contain;
-  flex-shrink: 0;
+  display: none;
 }
 
 .header-end {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
-  text-align: right;
+  display: none;
 }
 
-.header-code {
-  font-size: 10px;
+.header-app-name {
+  font-size: clamp(20px, 3.2vw, 26px);
   font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--primary);
+  letter-spacing: -0.04em;
+  color: #fff;
   line-height: 1.2;
 }
 
+.header-code,
 .header-title {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--navy);
-  line-height: 1.25;
+  display: none;
 }
 
 .header-brand,
@@ -536,7 +525,10 @@ button {
 .hero-panel {
   position: relative;
   overflow: hidden;
-  display: block;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 8px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -546,7 +538,9 @@ button {
 
 @media (min-width: 800px) {
   .hero-panel {
-    padding: 40px 40px 42px;
+    grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.85fr);
+    gap: 20px;
+    padding: 36px 36px 38px;
     max-width: 100%;
   }
 }
@@ -575,32 +569,32 @@ button {
   max-width: 34em;
 }
 
-.hero-badge {
-  display: inline-flex;
+.hero-visual {
+  position: relative;
+  z-index: 1;
+  display: none;
+  justify-content: center;
   align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  border-radius: 7px;
-  background: var(--navy);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  pointer-events: none;
 }
 
-.hero-badge-icon {
-  width: 13px;
-  height: 13px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.9;
+@media (min-width: 800px) {
+  .hero-visual {
+    display: flex;
+  }
+}
+
+.hero-visual-img {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  opacity: 0.95;
 }
 
 .hero-title {
-  margin: 4px 0 0;
+  margin: 0;
   font-size: clamp(24px, 4vw, 34px);
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -1520,6 +1514,148 @@ button {
   margin-top: 10px;
 }
 
+.pocket-mix-form {
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-mix-form span {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.pocket-mix-group {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fcfdff;
+}
+
+.pocket-mix-group--afib {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.pocket-mix-group--arrest {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.pocket-mix-group-title {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+
+.pocket-mix-group-sub {
+  margin: 0 0 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-sub);
+}
+
+.pocket-mix-group .pocket-mix-grid {
+  margin-top: 0;
+  background: #fff;
+}
+
+.pocket-compare {
+  margin-top: 14px;
+  padding: 14px 12px;
+  border-radius: 12px;
+  border: 1px solid #dbeafe;
+  background: #f8fbff;
+}
+
+.pocket-compare-title {
+  margin: 0 0 10px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-compare-table {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.pocket-compare-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+
+.pocket-compare-row:last-child {
+  border-bottom: none;
+}
+
+.pocket-compare-row--head {
+  background: var(--surface-soft);
+}
+
+.pocket-compare-row--head .pocket-compare-cell {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.pocket-compare-cell {
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  border-right: 1px solid var(--border);
+}
+
+.pocket-compare-cell:last-child {
+  border-right: none;
+}
+
+.pocket-compare-points {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pocket-compare-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-compare-warn {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #9a3412;
+  letter-spacing: -0.02em;
+}
+
 .pocket-mix-row {
   display: grid;
   grid-template-columns: 100px 1fr;
@@ -2293,8 +2429,8 @@ button {
   border-radius: var(--radius);
   padding: 18px 16px 16px;
   box-shadow: var(--shadow);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: default;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2302,9 +2438,8 @@ button {
 }
 
 .ecart-drug-card:hover {
-  transform: scale(1.02);
-  box-shadow: var(--shadow-hover);
-  border-color: #BFDBFE;
+  box-shadow: var(--shadow-soft);
+  border-color: var(--border);
 }
 
 .ecart-drug-name {
@@ -2345,13 +2480,6 @@ button {
   font-size: 18px;
   font-weight: 700;
   color: var(--primary);
-}
-
-.ecart-detail-btn {
-  width: 100%;
-  margin-top: auto;
-  font-size: 14px;
-  padding: 11px 12px;
 }
 
 .ecart-compare-panel {

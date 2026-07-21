@@ -24,7 +24,7 @@ var ECART_CATALOG = {
   atropine: {
     id: "atropine",
     name: "Atropine",
-    code: "—",
+    code: "MAT",
     strength: "0.5mg/1ml/amp",
     studyId: null
   },
@@ -45,14 +45,14 @@ var ECART_CATALOG = {
   dobutamine: {
     id: "dobutamine",
     name: "Dobutamine",
-    code: "—",
+    code: "MDOBU",
     strength: "250mg/5ml/amp",
     studyId: null
   },
   digoxin: {
     id: "digoxin",
     name: "Digoxin",
-    code: "—",
+    code: "MDGX",
     strength: "0.25mg/1ml/amp",
     studyId: null
   },
@@ -73,7 +73,7 @@ var ECART_CATALOG = {
   magnesium: {
     id: "magnesium",
     name: "Magnesium sulfate",
-    code: "—",
+    code: "MMGSO4",
     strength: "2g/20ml/vial",
     studyId: null
   },
@@ -88,9 +88,9 @@ var ECART_CATALOG = {
     id: "dopaminePremix",
     name: "Dopamine premix",
     code: "M8DOPAM",
-    strength: "800mg/500ml/bag",
+    strength: "400mg/500ml/bag (800 mcg/mL)",
     studyId: "dopamine-premix",
-    nameDetail: "Dextrose 25g + dopamine HCl 800mg"
+    nameDetail: "100mL 중 dopamine HCl 80mg → bag 총량 400mg"
   }
 };
 
@@ -303,7 +303,6 @@ function renderEcartDeptView() {
   list.forEach(function (drug) {
     var card = document.createElement("article");
     card.className = "ecart-drug-card";
-    card.setAttribute("tabindex", "0");
 
     var codeHtml =
       drug.code && drug.code !== "—"
@@ -327,62 +326,10 @@ function renderEcartDeptView() {
       '<div><span class="ecart-meta-label">수량</span><span class="ecart-meta-qty">' +
       drug.qty +
       "개</span></div>" +
-      "</div>" +
-      '<button type="button" class="secondary-btn ecart-detail-btn">상세보기</button>';
-
-    function openDetail(e) {
-      if (e) e.stopPropagation();
-      openEcartDrugDetail(drug);
-    }
-
-    card.querySelector(".ecart-detail-btn").onclick = openDetail;
-    card.onclick = function (e) {
-      if (e.target && e.target.classList.contains("ecart-detail-btn")) return;
-      openDetail(e);
-    };
-    card.onkeydown = function (e) {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openDetail(e);
-      }
-    };
+      "</div>";
 
     grid.appendChild(card);
   });
-}
-
-function openEcartDrugDetail(drug) {
-  if (drug.studyId) {
-    showTab("study");
-    setTimeout(function () {
-      var el = document.querySelector(
-        '.drug-card[data-study-id="' + drug.studyId + '"]'
-      );
-      if (!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      el.classList.add("ecart-study-highlight");
-      setTimeout(function () {
-        el.classList.remove("ecart-study-highlight");
-      }, 2200);
-
-      var toggle = el.querySelector(".detail-toggle-btn");
-      var detail = el.querySelector(".drug-detail");
-      if (
-        toggle &&
-        detail &&
-        detail.classList.contains("hidden") &&
-        typeof toggleDrugDetail === "function"
-      ) {
-        toggleDrugDetail(toggle);
-      }
-    }, 80);
-    return;
-  }
-
-  alert(
-    drug.name +
-      "\n\n기초 약물 학습 탭에 상세 학습 카드가 아직 없습니다.\n응급카트 규정상의 함량/제형·수량만 이 화면에서 확인하세요."
-  );
 }
 
 function toggleEcartComparePanel() {

@@ -943,6 +943,23 @@ function cautionHtml(items) {
   );
 }
 
+function mixRowsHtml(lines) {
+  return (lines || [])
+    .map(function (row) {
+      return (
+        '<div class="pocket-mix-row">' +
+        '<span class="pocket-mix-key">' +
+        escapeHtml(row.label) +
+        "</span>" +
+        '<span class="pocket-mix-val">' +
+        escapeHtml(row.value) +
+        "</span>" +
+        "</div>"
+      );
+    })
+    .join("");
+}
+
 function mixCardHtml(mix) {
   if (!mix) return "<p class=\"pocket-empty\">혼합 정보 없음</p>";
   var html = "";
@@ -959,31 +976,92 @@ function mixCardHtml(mix) {
       "</p>" +
       "</div>";
   }
-  html += '<div class="pocket-mix-grid">';
-  (mix.lines || []).forEach(function (row) {
+
+  if (mix.form) {
     html +=
-      '<div class="pocket-mix-row">' +
-      '<span class="pocket-mix-key">' +
-      escapeHtml(row.label) +
-      "</span>" +
-      '<span class="pocket-mix-val">' +
-      escapeHtml(row.value) +
-      "</span>" +
-      "</div>";
-  });
-  html += "</div>";
+      '<p class="pocket-mix-form"><span>제형</span> ' +
+      escapeHtml(mix.form) +
+      "</p>";
+  }
+
+  if (mix.groups && mix.groups.length) {
+    mix.groups.forEach(function (group) {
+      html +=
+        '<div class="pocket-mix-group' +
+        (group.tone ? " pocket-mix-group--" + escapeHtml(group.tone) : "") +
+        '">' +
+        '<p class="pocket-mix-group-title">' +
+        escapeHtml(group.title || "") +
+        "</p>" +
+        (group.subtitle
+          ? '<p class="pocket-mix-group-sub">' +
+            escapeHtml(group.subtitle) +
+            "</p>"
+          : "") +
+        '<div class="pocket-mix-grid">' +
+        mixRowsHtml(group.lines) +
+        "</div>" +
+        "</div>";
+    });
+  } else {
+    html +=
+      '<div class="pocket-mix-grid">' + mixRowsHtml(mix.lines) + "</div>";
+  }
+
+  if (mix.compare) {
+    var cmp = mix.compare;
+    html += '<div class="pocket-compare">';
+    html +=
+      '<p class="pocket-compare-title">' +
+      escapeHtml(cmp.title || "비교") +
+      "</p>";
+    html += '<div class="pocket-compare-table">';
+    html += '<div class="pocket-compare-row pocket-compare-row--head">';
+    (cmp.headers || []).forEach(function (h) {
+      html +=
+        '<span class="pocket-compare-cell">' + escapeHtml(h) + "</span>";
+    });
+    html += "</div>";
+    (cmp.rows || []).forEach(function (row) {
+      html += '<div class="pocket-compare-row">';
+      (row || []).forEach(function (cell) {
+        html +=
+          '<span class="pocket-compare-cell">' +
+          escapeHtml(cell) +
+          "</span>";
+      });
+      html += "</div>";
+    });
+    html += "</div>";
+    if (cmp.points && cmp.points.length) {
+      html += '<ul class="pocket-compare-points">';
+      cmp.points.forEach(function (p) {
+        html +=
+          "<li><span aria-hidden=\"true\">💡</span> " +
+          escapeHtml(p) +
+          "</li>";
+      });
+      html += "</ul>";
+    }
+    if (cmp.warning) {
+      html +=
+        '<p class="pocket-compare-warn"><span aria-hidden="true">⚠️</span> ' +
+        escapeHtml(cmp.warning) +
+        "</p>";
+    }
+    html += "</div>";
+  }
+
   if (mix.note) {
     html +=
-      '<p class="pocket-mix-note">' +
-      escapeHtml(mix.note) +
-      (mix.hospital ? "" : "") +
-      "</p>";
+      '<p class="pocket-mix-note">' + escapeHtml(mix.note) + "</p>";
   }
   if (mix.hospital === false) {
     html +=
       '<p class="pocket-mix-badge">일반 권장 기준 · 병원 프로토콜 우선</p>';
   } else if (mix.hospital) {
-    html += '<p class="pocket-mix-badge pocket-mix-badge--hospital">병원 기준</p>';
+    html +=
+      '<p class="pocket-mix-badge pocket-mix-badge--hospital">병원 기준</p>';
   }
   return html;
 }
@@ -996,7 +1074,8 @@ function hospitalPracticeHtml(studyId) {
   if (!tip) {
     return '<p class="pocket-empty">병원 실무 TIP 준비 중 · 프로토콜 확인</p>';
   }
-  return (
+
+  var html =
     '<div class="hospital-practice">' +
     '<p class="hospital-practice-title">🏥 우리 병원에서는 이렇게 합니다</p>' +
     '<div class="hospital-practice-card hospital-practice-card--star">' +
@@ -1004,30 +1083,45 @@ function hospitalPracticeHtml(studyId) {
     '<p class="hospital-practice-text">' +
     escapeHtml(tip.rememberFirst || "") +
     "</p>" +
-    "</div>" +
-    '<div class="hospital-practice-compare">' +
-    '<div class="hospital-practice-card hospital-practice-card--wrong">' +
-    '<p class="hospital-practice-label">❌ 신규가 자주 하는 실수</p>' +
-    '<p class="hospital-practice-text">' +
-    escapeHtml(tip.wrong || "") +
-    "</p>" +
-    "</div>" +
-    '<p class="hospital-practice-arrow" aria-hidden="true">↓</p>' +
-    '<div class="hospital-practice-card hospital-practice-card--right">' +
-    '<p class="hospital-practice-label">⭕ 올바른 계산</p>' +
-    '<p class="hospital-practice-text">' +
-    escapeHtml(tip.right || "") +
-    "</p>" +
-    "</div>" +
-    "</div>" +
+    "</div>";
+
+  if (tip.wrong) {
+    html +=
+      '<div class="hospital-practice-compare">' +
+      '<div class="hospital-practice-card hospital-practice-card--wrong">' +
+      '<p class="hospital-practice-label">❌ 신규가 자주 하는 실수</p>' +
+      '<p class="hospital-practice-text">' +
+      escapeHtml(tip.wrong) +
+      "</p>" +
+      "</div>" +
+      '<p class="hospital-practice-arrow" aria-hidden="true">↓</p>' +
+      '<div class="hospital-practice-card hospital-practice-card--right">' +
+      '<p class="hospital-practice-label">⭕ 올바른 계산</p>' +
+      '<p class="hospital-practice-text">' +
+      escapeHtml(tip.right || "") +
+      "</p>" +
+      "</div>" +
+      "</div>";
+  } else if (tip.right) {
+    html +=
+      '<div class="hospital-practice-card hospital-practice-card--right">' +
+      '<p class="hospital-practice-label">⭕ 우리 병원 rate</p>' +
+      '<p class="hospital-practice-text">' +
+      escapeHtml(tip.right) +
+      "</p>" +
+      "</div>";
+  }
+
+  html +=
     '<div class="hospital-practice-card hospital-practice-card--tip">' +
     '<p class="hospital-practice-label">💡 교육간호사 TIP</p>' +
     '<p class="hospital-practice-educator">' +
     escapeHtml(tip.educatorTip || "") +
     "</p>" +
     "</div>" +
-    "</div>"
-  );
+    "</div>";
+
+  return html;
 }
 
 function accordionItem(title, bodyHtml, accId) {

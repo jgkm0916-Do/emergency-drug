@@ -36,10 +36,10 @@ var HOSPITAL_TIPS = {
     educatorTip: "반감기가 짧다. 속도가 효과를 좌우한다."
   },
   amiodarone: {
-    rememberFirst: "QT prolongation을 반드시 확인한다.",
-    wrong: "용량(300/150)·Infusion 속도 혼동",
-    right: "적응증별 용량 구분 + ECG/BP 감시",
-    educatorTip: "리듬 안정화가 목적이다. QT·혈압을 함께 본다."
+    rememberFirst:
+      "AFib 우리 병원: ① MCDR 1@ + MNS100B (10min) → ② MCDR 6@ + MNSB (24hr)",
+    right: "Infusion 24hr: 6hr — 66cc/hr → 18hr — 33cc/hr",
+    educatorTip: "Loading(10min) 후 구간별 rate(66 → 33)를 반드시 확인한다."
   },
   bicarbonate: {
     rememberFirst: "산증이 동반될 때 고려하며, 무조건 투여하지 않는다.",
@@ -54,9 +54,10 @@ var HOSPITAL_TIPS = {
     educatorTip: "Tachycardia·부정맥을 반드시 관찰한다."
   },
   "dopamine-premix": {
-    rememberFirst: "800mg과 1600mg 농도를 반드시 구분한다.",
-    wrong: "Bag 종류만 보고 rate를 그대로 씀",
-    right: "라벨 농도 확인 → mL/h 환산 → Pump",
-    educatorTip: "Premix는 농도 확인이 투여의 시작이다."
+    rememberFirst:
+      "M8 = 400mg/500mL (800 mcg/mL), M16 = 800mg/500mL (1600 mcg/mL)",
+    wrong: "제품명 80mg/160mg을 bag 총량으로 오인하거나, 같은 rate로 투여",
+    right: "M16은 M8의 2배 농도 · 같은 mL/hr면 투여량 2배",
+    educatorTip: "라벨의 총량(mg)과 mcg/mL을 먼저 확인한다."
   }
 };

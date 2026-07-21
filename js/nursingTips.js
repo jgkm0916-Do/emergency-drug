@@ -192,8 +192,8 @@ var NURSING_TIPS = [
     title: "Dopamine Premix",
     code: "M8DOPAM / M16DOPAM",
     before: [
-      "800 mg / 1600 mg 농도 구분",
-      "제품 라벨 확인",
+      "M8 vs M16 농도 구분 (800 vs 1600 mcg/mL)",
+      "제품 라벨 총량 확인",
       "Infusion pump 준비",
       "목표 혈압 확인"
     ],
@@ -204,8 +204,9 @@ var NURSING_TIPS = [
       "HR monitoring"
     ],
     after: ["BP 반응", "HR", "부정맥", "Infusion rate 재확인"],
-    mistake: "800 mg과 1600 mg 농도를 구분하지 않음",
-    memory: "Dopamine Premix는 800 mg / 1600 mg 농도를 반드시 구분한다.",
+    mistake: "M8/M16 농도를 구분하지 않고 같은 rate로 투여",
+    memory:
+      "Dopamine Premix는 M8(800 mcg/mL)과 M16(1600 mcg/mL) 농도를 반드시 구분한다.",
     related: [
       { label: "Shock", action: "cheat", id: "cheat-shock" },
       { label: "Drug Library", action: "study", id: "dopamine-premix" }
