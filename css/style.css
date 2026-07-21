@@ -750,14 +750,18 @@ button {
   color: var(--primary);
 }
 
-/* Mini Clinical Guide (Clinical Pearl component) */
+/* Today's Nursing Tip (Home) */
 .pearl-mount {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.mcg {
+.drug-card[data-study-id] {
+  scroll-margin-top: 88px;
+}
+
+.tnt {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -765,34 +769,150 @@ button {
   overflow: hidden;
 }
 
-.mcg-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  padding: 14px 16px 12px;
+.tnt-head {
+  padding: 18px 20px 16px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  background: #fcfdff;
 }
 
-.mcg-brand {
+.tnt-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tnt-brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  color: var(--primary);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tnt-brand-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tnt-eyebrow {
+  margin: 0 0 4px;
+  font-size: 11px;
   font-weight: 800;
-  color: var(--mint);
+  letter-spacing: 0.02em;
+  color: var(--primary);
+}
+
+.tnt-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+  color: var(--navy);
+}
+
+.tnt-code {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-sub);
   letter-spacing: -0.01em;
 }
 
-.mcg-brand-icon {
-  width: 16px;
-  height: 16px;
-  color: var(--mint);
-  display: inline-flex;
+.tnt-body {
+  padding: 6px 0 0;
 }
 
-.mcg-brand-icon svg {
+.tnt-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tnt-section:last-of-type {
+  border-bottom: none;
+}
+
+.tnt-label {
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+
+.tnt-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tnt-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.tnt-check {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 999px;
+  background: var(--mint-soft);
+  color: var(--mint);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tnt-check svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tnt-section--warn {
+  background: #fffaf8;
+}
+
+.tnt-warn-icon,
+.tnt-memory-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  color: #d97706;
+}
+
+.tnt-memory-icon {
+  color: var(--mint);
+}
+
+.tnt-warn-icon svg,
+.tnt-memory-icon svg {
   width: 16px;
   height: 16px;
   stroke: currentColor;
@@ -802,169 +922,73 @@ button {
   stroke-linejoin: round;
 }
 
-.mcg-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-left: auto;
-}
-
-.mcg-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: var(--surface-soft);
-  border: 1px solid var(--border);
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--navy);
-  letter-spacing: -0.02em;
-}
-
-.mcg-tag--drug {
-  background: var(--primary-soft);
-  border-color: #dbeafe;
-  color: var(--primary);
-}
-
-.mcg-body {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-}
-
-@media (min-width: 760px) {
-  .mcg-body {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .mcg-section--remember {
-    grid-column: 1 / -1;
-  }
-}
-
-.mcg-section {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-@media (min-width: 760px) {
-  .mcg-section:nth-child(odd) {
-    border-right: 1px solid var(--border);
-  }
-
-  .mcg-section:nth-last-child(-n+2) {
-    border-bottom: none;
-  }
-
-  .mcg-section--remember {
-    border-right: none;
-    border-top: 1px solid var(--border);
-    border-bottom: none;
-    background: var(--mint-soft);
-  }
-}
-
-.mcg-section-label {
-  margin: 0 0 8px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--text-sub);
-  text-transform: none;
-}
-
-.mcg-section-label span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  margin-right: 6px;
-  border-radius: 6px;
-  background: var(--navy);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.mcg-list {
-  margin: 0;
-  padding: 0 0 0 18px;
-  color: var(--navy);
-  font-size: 13.5px;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-.mcg-list li + li {
-  margin-top: 2px;
-}
-
-.mcg-ecg {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mcg-ecg-fig {
-  background: #0f172a;
-  border-radius: 10px;
-  padding: 10px 12px 8px;
-}
-
-.mcg-ecg-fig svg {
-  display: block;
-  width: 100%;
-  height: 56px;
-}
-
-.mcg-ecg-caption {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--navy);
-  letter-spacing: -0.02em;
-}
-
-.mcg-drug {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 4px 12px;
-  align-items: baseline;
-}
-
-.mcg-drug-name {
-  grid-column: 1 / -1;
-  margin: 0 0 4px;
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--navy);
-  letter-spacing: -0.025em;
-}
-
-.mcg-drug dt {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-sub);
-}
-
-.mcg-drug dd {
-  margin: 0;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--navy);
-}
-
-.mcg-remember {
+.tnt-mistake {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1.65;
+  line-height: 1.6;
+  color: #9a3412;
   letter-spacing: -0.02em;
+}
+
+.tnt-section--memory {
+  background: var(--mint-soft);
+  border-bottom: none;
+}
+
+.tnt-memory {
+  margin: 0;
+  font-size: clamp(16px, 2.4vw, 19px);
+  font-weight: 800;
+  line-height: 1.55;
+  letter-spacing: -0.03em;
   color: var(--navy);
+}
+
+.tnt-related {
+  padding: 16px 20px 18px;
+  border-top: 1px solid var(--border);
+  background: #fcfdff;
+}
+
+.tnt-related-label {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-sub);
+}
+
+.tnt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tnt-chip {
+  margin: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--navy);
+  border-radius: 999px;
+  padding: 8px 12px;
+  min-height: 36px;
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.tnt-chip:hover {
+  background: var(--primary-soft);
+  border-color: #c7d7f5;
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.tnt-chip:active {
+  transform: scale(0.98);
 }
 
 /* Bottom nav removed from product UI */
@@ -1185,7 +1209,8 @@ button {
   .app-screen.is-enter-back,
   .module-card,
   .hero-cta,
-  .mcg {
+  .tnt,
+  .tnt-chip {
     animation: none !important;
     transition: none !important;
   }
@@ -1225,8 +1250,411 @@ button {
 }
 
 .drug-card:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
   box-shadow: var(--shadow-hover);
+}
+
+/* Pocket Guide */
+.pocket-guide-header {
+  margin-bottom: 4px;
+}
+
+.pocket-guide-kicker {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--primary);
+}
+
+.pocket-guide-lead {
+  margin-top: 8px !important;
+  max-width: 40em;
+}
+
+.pocket-card {
+  padding: 18px 16px 16px;
+}
+
+.pocket-card:hover {
+  transform: translateY(-2px);
+}
+
+.pocket-img-wrap {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 4px;
+}
+
+.pocket-img-wrap--multi {
+  gap: 8px;
+}
+
+.pocket-card .pocket-img,
+.pocket-card .drug-img.pocket-img {
+  max-width: 140px;
+  height: 130px;
+  padding: 10px;
+  margin: 0 0 10px;
+  border-radius: 12px;
+}
+
+.pocket-img-wrap--multi .pocket-img {
+  max-width: 100px;
+  height: 110px;
+}
+
+.pocket-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+
+.pocket-card .drug-code {
+  margin-bottom: 14px;
+}
+
+.pocket-block {
+  margin: 0 0 14px;
+}
+
+.pocket-block-title {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+}
+
+.pocket-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pocket-list li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.pocket-check-list,
+.pocket-caution-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pocket-check-list li,
+.pocket-caution-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-check {
+  color: var(--mint);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.pocket-warn {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.pocket-detail-btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.pocket-detail {
+  margin-top: 14px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.pocket-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pocket-acc-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fcfdff;
+  overflow: hidden;
+}
+
+.pocket-acc-btn {
+  width: 100%;
+  margin: 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  min-height: 44px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  text-align: left;
+}
+
+.pocket-acc-chevron {
+  font-size: 10px;
+  color: var(--text-sub);
+  transition: transform 0.18s ease;
+}
+
+.pocket-acc-item.is-open .pocket-acc-chevron {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+.pocket-acc-panel {
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+.pocket-acc-panel[hidden] {
+  display: none !important;
+}
+
+.pocket-admin {
+  margin: 12px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.pocket-admin div {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.pocket-admin dt {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.pocket-admin dd {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-mix-formula {
+  margin: 12px 0 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  border: 1px solid #dbeafe;
+  text-align: center;
+}
+
+.pocket-mix-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.pocket-mix-line {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-mix-plus {
+  margin: 4px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.pocket-mix-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.pocket-mix-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+}
+
+.pocket-mix-row:last-child {
+  border-bottom: none;
+}
+
+.pocket-mix-key {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.pocket-mix-val {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+}
+
+.pocket-mix-note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-sub);
+}
+
+.pocket-mix-badge {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.pocket-mix-badge--hospital {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.pocket-empty {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.hospital-practice {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hospital-practice-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #92400e;
+}
+
+.hospital-practice-card {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.hospital-practice-card--star {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.hospital-practice-card--wrong {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.hospital-practice-card--right {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.hospital-practice-card--tip {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.hospital-practice-label {
+  margin: 0 0 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--text-sub);
+}
+
+.hospital-practice-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+
+.hospital-practice-educator {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+  color: var(--navy);
+}
+
+.hospital-practice-arrow {
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.hospital-practice-compare {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .drug-card h3 {
@@ -1426,6 +1854,99 @@ button {
 
 .pediatric-body.hidden {
   display: none;
+}
+
+/* 병원 TIP — Drug Library (프로토콜 전용) */
+.hospital-tip-mount {
+  margin-top: 14px;
+}
+
+.hospital-tip {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.hospital-tip-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #fde68a;
+  background: #fef9c3;
+}
+
+.hospital-tip-emoji {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.hospital-tip-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+
+.hospital-tip-badge {
+  margin-left: auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #fcd34d;
+  font-size: 11px;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.hospital-tip-body {
+  padding: 4px 0 2px;
+}
+
+.hospital-tip-section {
+  padding: 12px 14px;
+  border-bottom: 1px solid #fde68a;
+}
+
+.hospital-tip-section:last-child {
+  border-bottom: none;
+}
+
+.hospital-tip-label {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #92400e;
+  letter-spacing: -0.01em;
+}
+
+.hospital-tip-list {
+  margin: 0;
+  padding: 0 0 0 18px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--navy);
+  letter-spacing: -0.015em;
+}
+
+.hospital-tip-list li + li {
+  margin-top: 4px;
+}
+
+.hospital-tip-section--educator {
+  background: #fff7ed;
+}
+
+.hospital-tip-educator {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 800;
+  line-height: 1.55;
+  letter-spacing: -0.025em;
+  color: var(--navy);
 }
 
 .source-tag {
@@ -2107,10 +2628,11 @@ footer.site-footer {
     min-height: 72px;
   }
 
-  .mcg-head,
-  .mcg-section {
-    padding-left: 14px;
-    padding-right: 14px;
+  .tnt-head,
+  .tnt-section,
+  .tnt-related {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .home-tile {

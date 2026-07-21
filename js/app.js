@@ -32,47 +32,11 @@ var QUIZ_ICONS = {
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>'
 };
 
-/* ---------- Mini Clinical Guide (Clinical Pearl) ----------
- * Extensible: add objects to CLINICAL_PEARLS.
- * Future: pick random pearl / filter by drug id.
- * Schema:
- * {
- *   id, label, topic, drug,
- *   symptoms: { title, items[] },
- *   ecg: { title, caption, kind: 'tall-t' },
- *   priorityDrug: { title, name, strength, dose, route },
- *   remember: { title, text }
- * }
+/* ---------- Today's Nursing Tip (Home) ----------
+ * Data: NURSING_TIPS in js/nursingTips.js
+ * Schema: { id, studyId, title, code, before[], during[], after[], mistake, memory, related[] }
  */
-var CLINICAL_PEARLS = [
-  {
-    id: "hyperkalemia-calcium",
-    label: "Clinical Pearl",
-    topic: "Hyperkalemia",
-    drug: "Calcium gluconate",
-    symptoms: {
-      title: "환자가 이런 증상을 보이면",
-      items: ["근력 저하", "감각 이상", "오심", "서맥"]
-    },
-    ecg: {
-      title: "ECG 특징",
-      caption: "Tall T wave",
-      kind: "tall-t"
-    },
-    priorityDrug: {
-      title: "우선 약물",
-      name: "Calcium gluconate",
-      strength: "10%",
-      dose: "1g",
-      route: "IV slow"
-    },
-    remember: {
-      title: "반드시 기억할 것",
-      text:
-        "Calcium은 칼륨을 제거하는 약물이 아니라 심근세포막을 안정화하는 약물이다."
-    }
-  }
-];
+var _lastNursingTipId = null;
 
 function escapeHtml(str) {
   return String(str)
@@ -82,115 +46,124 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
-function getEcgIllustrationSvg(kind) {
-  if (kind === "tall-t") {
-    return (
-      '<svg viewBox="0 0 240 56" aria-hidden="true">' +
-      '<path d="M4 32 H40 L48 32 L56 24 L64 40 L72 32 H100 L108 32 L116 8 L124 48 L132 32 H170 L178 32 L186 20 L194 44 L202 32 H236" ' +
-      'fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
-      '<text x="116" y="14" fill="#94a3b8" font-size="8" font-family="Pretendard,sans-serif">Tall T</text>' +
-      "</svg>"
-    );
-  }
-  return (
-    '<svg viewBox="0 0 240 56" aria-hidden="true">' +
-    '<path d="M4 28 H236" fill="none" stroke="#64748b" stroke-width="1.5"/>' +
-    "</svg>"
-  );
-}
-
-function pickClinicalPearl() {
-  var list = CLINICAL_PEARLS || [];
+function pickNursingTip() {
+  var list = typeof NURSING_TIPS !== "undefined" ? NURSING_TIPS : [];
   if (!list.length) return null;
-  /* Home shows one; swap index / Math.random later for rotation */
-  return list[0];
+  if (list.length === 1) return list[0];
+
+  var pool = list.filter(function (tip) {
+    return tip.id !== _lastNursingTipId;
+  });
+  if (!pool.length) pool = list;
+
+  var tip = pool[Math.floor(Math.random() * pool.length)];
+  _lastNursingTipId = tip.id;
+  return tip;
 }
 
-function renderMiniClinicalGuide(pearl) {
-  if (!pearl) return "";
-
-  var symptoms = pearl.symptoms || { title: "", items: [] };
-  var items = (symptoms.items || [])
+function tipCheckListHtml(items) {
+  return (items || [])
     .map(function (item) {
-      return "<li>" + escapeHtml(item) + "</li>";
+      return (
+        '<li class="tnt-item">' +
+        '<span class="tnt-check" aria-hidden="true">' +
+        '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>' +
+        "</span>" +
+        "<span>" +
+        escapeHtml(item) +
+        "</span>" +
+        "</li>"
+      );
     })
     .join("");
+}
 
-  var ecg = pearl.ecg || {};
-  var drug = pearl.priorityDrug || {};
-  var remember = pearl.remember || {};
+function tipRelatedHtml(related) {
+  return (related || [])
+    .map(function (chip) {
+      var action = chip.action || "study";
+      var id = chip.id || "";
+      return (
+        '<button type="button" class="tnt-chip" onclick="openNursingTipLink(\'' +
+        escapeHtml(action) +
+        "', '" +
+        escapeHtml(id) +
+        "')\">" +
+        escapeHtml(chip.label || "") +
+        "</button>"
+      );
+    })
+    .join("");
+}
+
+function renderNursingTipCard(tip) {
+  if (!tip) return "";
 
   return (
-    '<article class="mcg" data-pearl-id="' +
-    escapeHtml(pearl.id || "") +
+    '<article class="tnt" data-tip-id="' +
+    escapeHtml(tip.id || "") +
     '">' +
-    '<header class="mcg-head">' +
-    '<div class="mcg-brand">' +
-    '<span class="mcg-brand-icon" aria-hidden="true">' +
-    QUIZ_ICONS.lightbulb +
+    '<header class="tnt-head">' +
+    '<div class="tnt-brand">' +
+    '<span class="tnt-brand-icon" aria-hidden="true">' +
+    '<svg viewBox="0 0 24 24"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L14 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg>' +
     "</span>" +
-    escapeHtml(pearl.label || "Clinical Pearl") +
+    "<div>" +
+    '<p class="tnt-eyebrow">Today\'s Nursing Tip</p>' +
+    '<h3 class="tnt-title">' +
+    escapeHtml(tip.title || "") +
+    "</h3>" +
+    (tip.code
+      ? '<p class="tnt-code">' + escapeHtml(tip.code) + "</p>"
+      : "") +
     "</div>" +
-    '<div class="mcg-tags">' +
-    (pearl.topic
-      ? '<span class="mcg-tag">' + escapeHtml(pearl.topic) + "</span>"
-      : "") +
-    (pearl.drug
-      ? '<span class="mcg-tag mcg-tag--drug">' +
-        escapeHtml(pearl.drug) +
-        "</span>"
-      : "") +
     "</div>" +
     "</header>" +
-    '<div class="mcg-body">' +
-    '<section class="mcg-section">' +
-    '<h3 class="mcg-section-label"><span>1</span>' +
-    escapeHtml(symptoms.title || "증상") +
-    "</h3>" +
-    '<ul class="mcg-list">' +
-    items +
+    '<div class="tnt-body">' +
+    '<section class="tnt-section">' +
+    '<h4 class="tnt-label">① 투약 전 확인</h4>' +
+    '<ul class="tnt-list">' +
+    tipCheckListHtml(tip.before) +
     "</ul>" +
     "</section>" +
-    '<section class="mcg-section">' +
-    '<h3 class="mcg-section-label"><span>2</span>' +
-    escapeHtml(ecg.title || "ECG") +
-    "</h3>" +
-    '<div class="mcg-ecg">' +
-    '<div class="mcg-ecg-fig">' +
-    getEcgIllustrationSvg(ecg.kind || "tall-t") +
-    "</div>" +
-    '<p class="mcg-ecg-caption">' +
-    escapeHtml(ecg.caption || "") +
-    "</p>" +
-    "</div>" +
+    '<section class="tnt-section">' +
+    '<h4 class="tnt-label">② 투약 중 핵심</h4>' +
+    '<ul class="tnt-list">' +
+    tipCheckListHtml(tip.during) +
+    "</ul>" +
     "</section>" +
-    '<section class="mcg-section">' +
-    '<h3 class="mcg-section-label"><span>3</span>' +
-    escapeHtml(drug.title || "우선 약물") +
-    "</h3>" +
-    '<dl class="mcg-drug">' +
-    '<dt class="mcg-drug-name">' +
-    escapeHtml(drug.name || "") +
-    "</dt>" +
-    "<dt>농도</dt><dd>" +
-    escapeHtml(drug.strength || "") +
-    "</dd>" +
-    "<dt>용량</dt><dd>" +
-    escapeHtml(drug.dose || "") +
-    "</dd>" +
-    "<dt>투여</dt><dd>" +
-    escapeHtml(drug.route || "") +
-    "</dd>" +
-    "</dl>" +
+    '<section class="tnt-section">' +
+    '<h4 class="tnt-label">③ 투약 후 확인</h4>' +
+    '<ul class="tnt-list">' +
+    tipCheckListHtml(tip.after) +
+    "</ul>" +
     "</section>" +
-    '<section class="mcg-section mcg-section--remember">' +
-    '<h3 class="mcg-section-label"><span>4</span>' +
-    escapeHtml(remember.title || "반드시 기억할 것") +
-    "</h3>" +
-    '<p class="mcg-remember">' +
-    escapeHtml(remember.text || "") +
+    '<section class="tnt-section tnt-section--warn">' +
+    '<h4 class="tnt-label">' +
+    '<span class="tnt-warn-icon" aria-hidden="true">' +
+    '<svg viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>' +
+    "</span>" +
+    "④ 신규가 자주 하는 실수</h4>" +
+    '<p class="tnt-mistake">' +
+    escapeHtml(tip.mistake || "") +
     "</p>" +
     "</section>" +
+    '<section class="tnt-section tnt-section--memory">' +
+    '<h4 class="tnt-label">' +
+    '<span class="tnt-memory-icon" aria-hidden="true">' +
+    QUIZ_ICONS.lightbulb +
+    "</span>" +
+    "⑤ 꼭 기억!</h4>" +
+    '<p class="tnt-memory">' +
+    escapeHtml(tip.memory || "") +
+    "</p>" +
+    "</section>" +
+    '<footer class="tnt-related">' +
+    '<p class="tnt-related-label">⑥ 관련 학습</p>' +
+    '<div class="tnt-chips">' +
+    tipRelatedHtml(tip.related) +
+    "</div>" +
+    "</footer>" +
     "</div>" +
     "</article>"
   );
@@ -199,8 +172,34 @@ function renderMiniClinicalGuide(pearl) {
 function renderClinicalPearls() {
   var mount = document.getElementById("clinicalPearlMount");
   if (!mount) return;
-  var pearl = pickClinicalPearl();
-  mount.innerHTML = pearl ? renderMiniClinicalGuide(pearl) : "";
+  var tip = pickNursingTip();
+  mount.innerHTML = tip ? renderNursingTipCard(tip) : "";
+}
+
+function openStudyDrug(studyId) {
+  showTab("study");
+  var delay = prefersReducedMotion() ? 0 : 120;
+  window.setTimeout(function () {
+    var el = document.querySelector(
+      '.drug-card[data-study-id="' + studyId + '"]'
+    );
+    if (el && typeof el.scrollIntoView === "function") {
+      el.scrollIntoView({
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+        block: "start"
+      });
+    }
+  }, delay);
+}
+
+function openNursingTipLink(action, id) {
+  if (action === "cheat") {
+    openCheatSection(id);
+    return;
+  }
+  if (action === "study") {
+    openStudyDrug(id);
+  }
 }
 
 function updateBottomNav() {
@@ -825,45 +824,323 @@ function showTab(tab) {
 }
 
 function toggleDrugDetail(button) {
-  var detail = button.nextElementSibling;
-  if (!detail || !detail.classList.contains("drug-detail")) return;
+  var card = button.closest(".drug-card");
+  if (!card) return;
+  var detail = card.querySelector(".drug-detail");
+  if (!detail) return;
 
   var isOpen = !detail.classList.contains("hidden");
-
   if (isOpen) {
     detail.classList.add("hidden");
     button.setAttribute("aria-expanded", "false");
-    button.textContent = "투여방법 및 상세정보 보기";
+    if (button.classList.contains("pocket-detail-btn")) {
+      button.textContent = "자세히 보기";
+    } else {
+      button.textContent = "투여방법 및 상세정보 보기";
+    }
   } else {
     detail.classList.remove("hidden");
     button.setAttribute("aria-expanded", "true");
-    button.textContent = "투여방법 및 상세정보 닫기";
+    if (button.classList.contains("pocket-detail-btn")) {
+      button.textContent = "상세 닫기";
+    } else {
+      button.textContent = "투여방법 및 상세정보 닫기";
+    }
   }
 }
 
 function togglePediatric(button) {
+  /* Pocket Guide: Pediatric는 accordion으로 통합 */
+  var item = button.closest(".pocket-acc-item");
+  if (item) {
+    togglePocketAccordion(button);
+    return;
+  }
   var body = button.nextElementSibling;
   if (!body || !body.classList.contains("pediatric-body")) return;
-
   var isOpen = !body.classList.contains("hidden");
-
   if (isOpen) {
     body.classList.add("hidden");
     button.setAttribute("aria-expanded", "false");
-    button.textContent = "③ Pediatric 보기";
   } else {
     body.classList.remove("hidden");
     button.setAttribute("aria-expanded", "true");
-    button.textContent = "③ Pediatric 접기";
+  }
+}
+
+function togglePocketAccordion(button) {
+  var item = button.closest(".pocket-acc-item");
+  if (!item) return;
+  var panel = item.querySelector(".pocket-acc-panel");
+  if (!panel) return;
+  var open = item.classList.contains("is-open");
+  if (open) {
+    item.classList.remove("is-open");
+    panel.hidden = true;
+    button.setAttribute("aria-expanded", "false");
+  } else {
+    item.classList.add("is-open");
+    panel.hidden = false;
+    button.setAttribute("aria-expanded", "true");
   }
 }
 
 function initHomeConsole() {
   renderClinicalPearls();
+  renderPocketGuide();
 }
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initHomeConsole);
 } else {
   initHomeConsole();
+}
+
+/* ---------- Pocket Guide (Drug Library) ---------- */
+function listBullets(items, className) {
+  return (
+    '<ul class="' +
+    (className || "pocket-list") +
+    '">' +
+    (items || [])
+      .map(function (item) {
+        return "<li>" + escapeHtml(item) + "</li>";
+      })
+      .join("") +
+    "</ul>"
+  );
+}
+
+function checklistHtml(items) {
+  return (
+    '<ul class="pocket-check-list">' +
+    (items || [])
+      .map(function (item) {
+        return (
+          '<li><span class="pocket-check" aria-hidden="true">✓</span>' +
+          escapeHtml(item) +
+          "</li>"
+        );
+      })
+      .join("") +
+    "</ul>"
+  );
+}
+
+function cautionHtml(items) {
+  return (
+    '<ul class="pocket-caution-list">' +
+    (items || [])
+      .map(function (item) {
+        return (
+          '<li><span class="pocket-warn" aria-hidden="true">⚠</span>' +
+          escapeHtml(item) +
+          "</li>"
+        );
+      })
+      .join("") +
+    "</ul>"
+  );
+}
+
+function mixCardHtml(mix) {
+  if (!mix) return "<p class=\"pocket-empty\">혼합 정보 없음</p>";
+  var html = "";
+  if (mix.bag && mix.drug) {
+    html +=
+      '<div class="pocket-mix-formula">' +
+      '<p class="pocket-mix-label">💉 혼합</p>' +
+      '<p class="pocket-mix-line">' +
+      escapeHtml(mix.bag) +
+      "</p>" +
+      '<p class="pocket-mix-plus">+</p>' +
+      '<p class="pocket-mix-line">' +
+      escapeHtml(mix.drug) +
+      "</p>" +
+      "</div>";
+  }
+  html += '<div class="pocket-mix-grid">';
+  (mix.lines || []).forEach(function (row) {
+    html +=
+      '<div class="pocket-mix-row">' +
+      '<span class="pocket-mix-key">' +
+      escapeHtml(row.label) +
+      "</span>" +
+      '<span class="pocket-mix-val">' +
+      escapeHtml(row.value) +
+      "</span>" +
+      "</div>";
+  });
+  html += "</div>";
+  if (mix.note) {
+    html +=
+      '<p class="pocket-mix-note">' +
+      escapeHtml(mix.note) +
+      (mix.hospital ? "" : "") +
+      "</p>";
+  }
+  if (mix.hospital === false) {
+    html +=
+      '<p class="pocket-mix-badge">일반 권장 기준 · 병원 프로토콜 우선</p>';
+  } else if (mix.hospital) {
+    html += '<p class="pocket-mix-badge pocket-mix-badge--hospital">병원 기준</p>';
+  }
+  return html;
+}
+
+function hospitalPracticeHtml(studyId) {
+  var tip =
+    typeof HOSPITAL_TIPS !== "undefined" && HOSPITAL_TIPS
+      ? HOSPITAL_TIPS[studyId]
+      : null;
+  if (!tip) {
+    return '<p class="pocket-empty">병원 실무 TIP 준비 중 · 프로토콜 확인</p>';
+  }
+  return (
+    '<div class="hospital-practice">' +
+    '<p class="hospital-practice-title">🏥 우리 병원에서는 이렇게 합니다</p>' +
+    '<div class="hospital-practice-card hospital-practice-card--star">' +
+    '<p class="hospital-practice-label">⭐ 먼저 기억!</p>' +
+    '<p class="hospital-practice-text">' +
+    escapeHtml(tip.rememberFirst || "") +
+    "</p>" +
+    "</div>" +
+    '<div class="hospital-practice-compare">' +
+    '<div class="hospital-practice-card hospital-practice-card--wrong">' +
+    '<p class="hospital-practice-label">❌ 신규가 자주 하는 실수</p>' +
+    '<p class="hospital-practice-text">' +
+    escapeHtml(tip.wrong || "") +
+    "</p>" +
+    "</div>" +
+    '<p class="hospital-practice-arrow" aria-hidden="true">↓</p>' +
+    '<div class="hospital-practice-card hospital-practice-card--right">' +
+    '<p class="hospital-practice-label">⭕ 올바른 계산</p>' +
+    '<p class="hospital-practice-text">' +
+    escapeHtml(tip.right || "") +
+    "</p>" +
+    "</div>" +
+    "</div>" +
+    '<div class="hospital-practice-card hospital-practice-card--tip">' +
+    '<p class="hospital-practice-label">💡 교육간호사 TIP</p>' +
+    '<p class="hospital-practice-educator">' +
+    escapeHtml(tip.educatorTip || "") +
+    "</p>" +
+    "</div>" +
+    "</div>"
+  );
+}
+
+function accordionItem(title, bodyHtml, accId) {
+  return (
+    '<div class="pocket-acc-item" data-acc="' +
+    escapeHtml(accId) +
+    '">' +
+    '<button type="button" class="pocket-acc-btn" aria-expanded="false" onclick="togglePocketAccordion(this)">' +
+    '<span class="pocket-acc-chevron" aria-hidden="true">▼</span>' +
+    "<span>" +
+    escapeHtml(title) +
+    "</span>" +
+    "</button>" +
+    '<div class="pocket-acc-panel" hidden>' +
+    bodyHtml +
+    "</div>" +
+    "</div>"
+  );
+}
+
+function renderPocketDrugCard(drug) {
+  var imgs = (drug.images || [])
+    .map(function (img) {
+      return (
+        '<img src="' +
+        escapeHtml(img.src) +
+        '" class="drug-img pocket-img" alt="' +
+        escapeHtml(img.alt || drug.title) +
+        '">'
+      );
+    })
+    .join("");
+
+  var admin = drug.admin || {};
+  var adminHtml =
+    '<dl class="pocket-admin">' +
+    "<div><dt>경로</dt><dd>" +
+    escapeHtml(admin.route || "—") +
+    "</dd></div>" +
+    "<div><dt>속도</dt><dd>" +
+    escapeHtml(admin.rate || "—") +
+    "</dd></div>" +
+    "<div><dt>Pump</dt><dd>" +
+    escapeHtml(admin.pump || "—") +
+    "</dd></div>" +
+    "<div><dt>Monitoring</dt><dd>" +
+    escapeHtml(admin.monitoring || "—") +
+    "</dd></div>" +
+    "</dl>";
+
+  var pedBadge =
+    drug.pediatricSource === "hospital" ? "병원" : "일반 근거";
+  var pedHtml =
+    listBullets(drug.pediatric, "pocket-list") +
+    '<p class="pocket-mix-badge">' +
+    escapeHtml(pedBadge) +
+    "</p>";
+
+  return (
+    '<article class="drug-card pocket-card" data-study-id="' +
+    escapeHtml(drug.id) +
+    '">' +
+    '<div class="pocket-quick">' +
+    '<div class="pocket-img-wrap' +
+    ((drug.images || []).length > 1 ? " pocket-img-wrap--multi" : "") +
+    '">' +
+    imgs +
+    "</div>" +
+    "<h3>" +
+    escapeHtml(drug.title) +
+    "</h3>" +
+    '<p class="drug-code">병원코드: ' +
+    escapeHtml(drug.code) +
+    "</p>" +
+    '<section class="pocket-block">' +
+    '<h4 class="pocket-block-title">📌 언제 사용하는 약인가?</h4>' +
+    listBullets(drug.when, "pocket-list") +
+    "</section>" +
+    '<section class="pocket-block">' +
+    '<h4 class="pocket-block-title">🎯 목적</h4>' +
+    listBullets(drug.purpose, "pocket-list") +
+    "</section>" +
+    '<section class="pocket-block">' +
+    '<h4 class="pocket-block-title">👀 투약 전 확인</h4>' +
+    checklistHtml(drug.checklist) +
+    "</section>" +
+    '<button type="button" class="detail-toggle-btn pocket-detail-btn" onclick="toggleDrugDetail(this)" aria-expanded="false">자세히 보기</button>' +
+    "</div>" +
+    '<div class="drug-detail pocket-detail hidden">' +
+    '<div class="pocket-accordion">' +
+    accordionItem("투여방법", adminHtml, "admin") +
+    accordionItem("희석 및 혼합", mixCardHtml(drug.mix), "mix") +
+    accordionItem(
+      "병원 실무 TIP",
+      hospitalPracticeHtml(drug.id),
+      "hospital"
+    ) +
+    accordionItem("주의사항", cautionHtml(drug.cautions), "caution") +
+    accordionItem("Pediatric", pedHtml, "pediatric") +
+    "</div>" +
+    "</div>" +
+    "</article>"
+  );
+}
+
+function renderPocketGuide() {
+  var grid = document.getElementById("pocketGuideGrid");
+  if (!grid) return;
+  var drugs =
+    typeof POCKET_GUIDE_DRUGS !== "undefined" ? POCKET_GUIDE_DRUGS : [];
+  if (!drugs.length) {
+    grid.innerHTML = "";
+    return;
+  }
+  grid.innerHTML = drugs.map(renderPocketDrugCard).join("");
 }

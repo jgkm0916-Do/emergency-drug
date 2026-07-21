@@ -81,7 +81,7 @@ var ECART_CATALOG = {
     id: "norepinephrine",
     name: "Norepinephrine bitartrate",
     code: "MLEVO",
-    strength: "8mg/4cc/Amp",
+    strength: "8 mg/4 mL/amp",
     studyId: "norepinephrine"
   },
   dopaminePremix: {
