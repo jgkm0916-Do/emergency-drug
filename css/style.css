@@ -524,11 +524,11 @@ button {
 /* Hero — typography first, faint ECG only */
 .hero-panel {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
-  gap: 8px;
+  gap: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -538,6 +538,7 @@ button {
 
 @media (min-width: 800px) {
   .hero-panel {
+    overflow: hidden;
     grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.85fr);
     gap: 20px;
     padding: 36px 36px 38px;
@@ -561,43 +562,55 @@ button {
 
 .hero-copy {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
   max-width: 34em;
+  padding-right: 96px;
+}
+
+@media (min-width: 800px) {
+  .hero-copy {
+    padding-right: 0;
+  }
 }
 
 .hero-visual {
-  position: relative;
+  position: absolute;
+  right: 10px;
+  bottom: 14px;
   z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
+  width: 112px;
+  height: 82px;
+  margin: 0;
   pointer-events: none;
-  margin-top: 8px;
-  min-height: 110px;
 }
 
 .hero-monitor {
   display: block;
-  width: 168px;
-  max-width: 100%;
-  height: auto;
-  opacity: 0.8;
+  width: 112px;
+  height: 82px;
+  opacity: 0.85;
 }
 
 @media (min-width: 800px) {
   .hero-visual {
-    margin-top: 0;
-    min-height: 0;
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    height: auto;
+    display: flex;
     justify-content: flex-end;
+    align-items: center;
   }
 
   .hero-monitor {
     width: 220px;
-    max-width: 100%;
+    height: 160px;
     opacity: 0.88;
   }
 }
@@ -2749,7 +2762,8 @@ footer.site-footer {
   }
 
   .hero-panel {
-    padding: 24px 18px 26px;
+    padding: 24px 18px 28px;
+    overflow: visible;
   }
 
   .hero-title {
