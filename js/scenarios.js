@@ -603,7 +603,7 @@ var scenarios = {
       id: "brady-symptomatic",
       caseLabel: "CASE · 어지럼·저혈압을 동반한 서맥",
       title: "어지럼·저혈압을 동반한 서맥",
-      difficulty: "basic",
+      difficulty: "intermediate",
       rhythm: "Sinus bradycardia",
       text: "79세 환자. HR 34, BP 84/50, 어지럼·식은땀을 호소합니다. 고칼륨 소견은 없습니다.",
       hr: "34",
@@ -627,15 +627,28 @@ var scenarios = {
         ),
         step(
           "STEP 2. 증상성 서맥·저혈압에서 약물로 고려할 수 있는 것은?",
-          ["Dopamine (MDOPA)", "Adenosine (MADEN)", "Amiodarone (MCDR)"],
-          "Dopamine (MDOPA)",
-          "관류가 떨어진 증상성 서맥에서 Dopamine 정주로 HR·BP를 지지할 수 있습니다.",
-          "Adenosine·Amiodarone은 빈맥/부정맥 약으로 서맥에는 부적절합니다.",
-          "Adenosine은 오히려 심박을 더 늦출 수 있어 서맥에서는 위험합니다. Amiodarone도 이 맥락의 약이 아닙니다.",
-          "서맥에 심박을 낮추는 약(Adenosine)을 주지 않습니다."
+          ["Atropine (MAT)", "Dopamine (MDOPA)", "Adenosine (MADEN)"],
+          "Atropine (MAT)",
+          "증상성 서맥의 1차 약물은 Atropine입니다. 미주신경을 차단해 심박수를 올립니다.",
+          "Dopamine은 Atropine 무반응 시 고려하는 2차 약물입니다. Adenosine은 빈맥 약으로 서맥에는 부적절합니다.",
+          "증상성 서맥의 1차 약물은 Atropine(0.5mg IV, 반복 가능, 최대 3mg)이며 미주신경 차단으로 심박수를 올린다.",
+          "증상성 서맥: Atropine 1차 → 무반응 시 pacing / Dopamine."
         ),
         step(
-          "STEP 3. Dopamine 정주 중 특히 관찰할 것은?",
+          "STEP 3. Atropine 1mg 투여에도 HR·BP 반응이 부족합니다. 다음으로 고려할 것은?",
+          [
+            "경피 페이싱 또는 Dopamine 정주 준비",
+            "Atropine을 최대 용량까지 반복만 한다",
+            "Adenosine으로 전환한다"
+          ],
+          "경피 페이싱 또는 Dopamine 정주 준비",
+          "Atropine 반응이 부족하면 경피 페이싱 또는 Dopamine 정주를 준비합니다.",
+          "최대 용량까지 반복만 하거나 Adenosine으로 전환하는 것은 적절하지 않습니다.",
+          "Atropine은 반복할 수 있으나(최대 3mg), 반응이 없으면 다음 경로(pacing·Dopamine)로 전환해야 합니다. Adenosine은 서맥에 금기에 가깝습니다.",
+          "1차 약 무반응 = 경로 전환. ‘반복만’에 머물지 않습니다."
+        ),
+        step(
+          "STEP 4. Dopamine 정주 중 특히 관찰할 것은?",
           [
             "빈맥·부정맥 등 과교정과 HR/BP 반응",
             "소변 색만",
@@ -691,18 +704,31 @@ var scenarios = {
         step(
           "STEP 3. 증상성 서맥으로 관류가 저하된 지금 고려할 약물은?",
           [
+            "Atropine (MAT)",
             "Dopamine (MDOPA)",
-            "Adenosine (MADEN)",
             "고칼륨 확인 없이 Calcium gluconate"
           ],
-          "Dopamine (MDOPA)",
-          "증상성 서맥·저관류에서 Dopamine을 고려할 수 있습니다(원인 치료와 병행).",
-          "Adenosine은 부적절하고, Calcium은 고칼륨이 확인될 때 검토합니다.",
-          "Calcium은 고칼륨혈증 심근 안정화 맥락에서 쓰지, 확인 없이 서맥에 쓰지 않습니다.",
-          "약 선택 = 리듬 + 임상 맥락(원인)."
+          "Atropine (MAT)",
+          "증상성 서맥의 1차 약물은 Atropine입니다. 미주신경을 차단해 심박수를 올립니다.",
+          "Dopamine은 Atropine 무반응 시 고려하는 2차 약물입니다. Calcium은 고칼륨이 확인될 때 검토합니다.",
+          "증상성 서맥의 1차 약물은 Atropine(0.5mg IV, 반복 가능, 최대 3mg)이며 미주신경 차단으로 심박수를 올린다.",
+          "약 선택 = 리듬 + 임상 맥락(원인). 1차는 Atropine."
         ),
         step(
-          "STEP 4. 처치 중 재평가 항목으로 적절한 것은?",
+          "STEP 4. Atropine 1mg 투여에도 HR·BP 반응이 부족합니다. 다음으로 고려할 것은?",
+          [
+            "경피 페이싱 또는 Dopamine 정주 준비",
+            "Atropine을 최대 용량까지 반복만 한다",
+            "Adenosine으로 전환한다"
+          ],
+          "경피 페이싱 또는 Dopamine 정주 준비",
+          "Atropine 반응이 부족하면 경피 페이싱 또는 Dopamine 정주를 준비합니다(허혈 원인 치료와 병행).",
+          "최대 용량까지 반복만 하거나 Adenosine으로 전환하는 것은 적절하지 않습니다.",
+          "하벽 MI 서맥에서도 Atropine 무반응이면 pacing·Dopamine으로 경로를 전환하고, 원인(허혈) 치료를 함께 진행합니다.",
+          "1차 약 무반응 = 경로 전환. 원인 치료도 함께 굴립니다."
+        ),
+        step(
+          "STEP 5. 처치 중 재평가 항목으로 적절한 것은?",
           [
             "HR·BP·흉통/관류 증상·ECG 변화",
             "체중만",

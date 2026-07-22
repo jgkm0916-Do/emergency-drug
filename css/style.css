@@ -2513,6 +2513,39 @@ button {
   border-color: var(--border);
 }
 
+.ecart-drug-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ecart-drug-head .ecart-drug-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.ecart-study-btn {
+  flex-shrink: 0;
+  width: auto;
+  margin: 0;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.ecart-study-btn:hover {
+  background: #dbeafe;
+  border-color: var(--primary);
+  transform: none;
+}
+
 .ecart-drug-name {
   margin: 0;
   font-size: 17px;

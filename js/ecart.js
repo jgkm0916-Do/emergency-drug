@@ -309,10 +309,21 @@ function renderEcartDeptView() {
         ? '<span class="ecart-code">' + drug.code + "</span>"
         : '<span class="ecart-code ecart-code--muted">코드 미기재</span>';
 
+    var studyBtn = drug.studyId
+      ? '<button type="button" class="ecart-study-btn" onclick="openStudyDrug(\'' +
+        drug.studyId +
+        "')\" aria-label=\"" +
+        drug.name +
+        ' 학습 보기">학습</button>'
+      : "";
+
     card.innerHTML =
+      '<div class="ecart-drug-head">' +
       "<h4 class=\"ecart-drug-name\">" +
       drug.name +
       "</h4>" +
+      studyBtn +
+      "</div>" +
       (drug.nameDetail
         ? '<p class="ecart-drug-sub">' + drug.nameDetail + "</p>"
         : "") +
