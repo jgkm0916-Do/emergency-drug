@@ -282,5 +282,38 @@ var POCKET_GUIDE_DRUGS = [
     ],
     pediatric: ["체중·프로토콜 기반 투여 확인"],
     pediatricSource: "ref"
+  },
+  {
+    id: "atropine",
+    title: "Atropine",
+    code: "MAT",
+    images: [{ src: "images/MAT.jpg", alt: "Atropine" }],
+    when: ["증상성 서맥 (symptomatic bradycardia)", "서맥 1차 약물"],
+    purpose: ["미주신경 차단", "심박수 증가"],
+    checklist: [
+      "서맥 원인/증상 확인",
+      "ECG 지속 모니터링",
+      "반복 투여 가능 여부 확인"
+    ],
+    admin: {
+      route: "IV / IO bolus",
+      rate: "Bolus (프로토콜)",
+      pump: "해당 없음 (bolus)",
+      monitoring: "HR · BP · ECG"
+    },
+    mix: {
+      hospital: true,
+      lines: [
+        { label: "제형", value: "0.5mg/1ml/amp" },
+        { label: "Adult", value: "1mg IV" },
+        { label: "반복", value: "3–5분 간격 · 최대 총량 3mg" }
+      ]
+    },
+    cautions: [
+      "급성 심근허혈 — 심박수 과증가로 허혈 악화 가능",
+      "3도 AV block / 이식 심장 — 효과 제한적일 수 있음"
+    ],
+    pediatric: ["0.02mg/kg IV", "0.04–0.06mg/kg ET"],
+    pediatricSource: "hospital"
   }
 ];

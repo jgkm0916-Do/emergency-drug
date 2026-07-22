@@ -26,7 +26,7 @@ var ECART_CATALOG = {
     name: "Atropine",
     code: "MAT",
     strength: "0.5mg/1ml/amp",
-    studyId: null
+    studyId: "atropine"
   },
   calcium: {
     id: "calcium",
