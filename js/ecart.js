@@ -312,7 +312,7 @@ function renderEcartDeptView() {
     var studyBtn = drug.studyId
       ? '<button type="button" class="ecart-study-btn" onclick="openStudyDrug(\'' +
         drug.studyId +
-        "')\" aria-label=\"" +
+        "', 'ecart')\" aria-label=\"" +
         drug.name +
         ' 학습 보기">학습</button>'
       : "";

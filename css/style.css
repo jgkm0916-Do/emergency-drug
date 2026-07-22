@@ -451,6 +451,162 @@ button {
   color: #991B1B;
 }
 
+/* ——— Glossary (H's & T's) ——— */
+.glossary-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  margin: 0 1px;
+  padding: 2px 8px;
+  border: 1px solid #BFDBFE;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font: inherit;
+  font-size: 0.92em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  cursor: pointer;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glossary-term-label {
+  white-space: nowrap;
+}
+
+.glossary-term-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95em;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.glossary-term:hover,
+.glossary-term[aria-expanded="true"] {
+  background: #dbeafe;
+  border-color: var(--primary);
+  color: var(--primary-hover);
+}
+
+.glossary-term:hover .glossary-term-icon,
+.glossary-term[aria-expanded="true"] .glossary-term-icon {
+  opacity: 1;
+}
+
+.glossary-popover {
+  position: absolute;
+  z-index: 200;
+  max-width: calc(100vw - 24px);
+  padding: 12px 14px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-family: var(--font);
+}
+
+.glossary-popover.hidden {
+  display: none !important;
+}
+
+.glossary-popover-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  align-items: start;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.glossary-popover-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+
+.glossary-popover-sub {
+  grid-column: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-sub);
+}
+
+.glossary-popover-close {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 28px;
+  height: 28px;
+  margin: -4px -4px 0 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--text-sub);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.glossary-popover-close:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.glossary-group + .glossary-group {
+  margin-top: 10px;
+}
+
+.glossary-group-label {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.glossary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.glossary-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.glossary-en {
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.glossary-ko {
+  color: var(--text-sub);
+}
+
+.glossary-ko::before {
+  content: "· ";
+  color: #cbd5e1;
+}
+
 /* ——— Monitor (kept clinical look) ——— */
 .monitor {
   background: #020617;
@@ -1322,6 +1478,54 @@ button {
 /* Pocket Guide */
 .pocket-guide-header {
   margin-bottom: 4px;
+}
+
+.study-back-fab {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #BFDBFE;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.28);
+  transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.study-back-fab:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 10px 26px rgba(37, 99, 235, 0.34);
+  transform: translateY(-1px);
+}
+
+.study-back-fab:active {
+  transform: scale(0.98);
+}
+
+.study-back-fab.hidden {
+  display: none !important;
+}
+
+.study-back-fab-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.study-back-fab-label {
+  line-height: 1;
 }
 
 .pocket-guide-kicker {
