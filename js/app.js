@@ -593,6 +593,21 @@ function loadQuestion() {
   document.getElementById("caseTitle").innerText =
     scenario.caseLabel || scenario.title || "";
 
+  var diffEl = document.getElementById("caseDifficulty");
+  if (diffEl) {
+    var diffMeta =
+      typeof getDifficultyMeta === "function"
+        ? getDifficultyMeta(scenario.difficulty)
+        : null;
+    if (diffMeta) {
+      diffEl.className = "sim-badge sim-badge--" + diffMeta.tone;
+      diffEl.textContent = diffMeta.icon + " " + diffMeta.label;
+    } else {
+      diffEl.className = "sim-badge hidden";
+      diffEl.textContent = "";
+    }
+  }
+
   var rhythmEl = document.getElementById("caseRhythm");
   if (rhythmEl) {
     if (scenario.rhythm) {
