@@ -23,7 +23,7 @@
 
 <div class="site-notice">
   <span class="site-notice-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-  <p class="site-notice-text"><strong>공지</strong> 교육용 자료입니다. 실제 임상에서는 반드시 병원 프로토콜·의사 처방·환자 상태를 우선 확인하세요.</p>
+  <p class="site-notice-text"><strong>공지</strong> 교육용 자료입니다. 실제 임상에서는 반드시 의사 처방·병원 지침·환자 상태를 우선 확인하세요.</p>
 </div>
 
 <header class="app-header">
@@ -130,6 +130,7 @@
     </div>
 
     <div class="case-title" id="caseTitle"></div>
+    <div id="caseRhythm" class="case-rhythm hidden" aria-label="확인된 리듬"></div>
     <div class="case-text" id="caseText"></div>
 
     <div class="monitor">
@@ -190,18 +191,32 @@
   </p>
 
   <div class="scenario-card cheat-card" id="cheat-cpr">
-    <h3>Cardiac Arrest / CPR</h3>
+    <h3 class="term-heading">
+      <span class="term-stack">
+        <span class="term-abbr">CPR</span>
+      </span>
+    </h3>
     <div class="cheat-grid">
       <div class="cheat-box">
         <h4>사용 약물</h4>
         <div class="drug-badges">
           <div class="drug-badge-item">
             <span class="code-badge code-badge--primary">MEPI</span>
-            <span class="drug-badge-name">Epinephrine</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Epinephrine</span>
+                <span class="term-ko">에피네프린</span>
+              </span>
+            </span>
           </div>
           <div class="drug-badge-item">
             <span class="code-badge code-badge--secondary">MCDR</span>
-            <span class="drug-badge-name">Amiodarone</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Amiodarone</span>
+                <span class="term-ko">아미오다론</span>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -210,24 +225,50 @@
         <ul class="cheat-list">
           <li>관상동맥 관류압 증가</li>
           <li>심장 자극</li>
-          <li>Refractory VF/VT 안정화</li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">VF / VT</span>
+              <span class="term-en">Ventricular Fibrillation / Ventricular Tachycardia</span>
+              <span class="term-ko">심실세동 / 심실빈맥</span>
+            </span>
+            <span class="term-note"> Refractory 안정화</span>
+          </li>
         </ul>
       </div>
       <div class="cheat-box">
         <h4>간호 핵심</h4>
         <ul class="cheat-list">
           <li>CPR 중 투여 시점 확인</li>
-          <li>Flush</li>
-          <li>ECG / BP monitoring</li>
+          <li>NS 20 mL Flush</li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">ECG</span>
+            </span>
+            <span class="term-note"> / BP monitoring</span>
+          </li>
         </ul>
       </div>
       <div class="cheat-box">
         <h4>모니터링</h4>
         <ul class="cheat-list">
-          <li>ECG</li>
-          <li>BP</li>
-          <li>ROSC</li>
-          <li>상황 인지·우선 처치·재평가: 병원 프로토콜 확인 후 입력 예정</li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">ECG</span>
+            </span>
+          </li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">BP</span>
+            </span>
+          </li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">ROSC</span>
+              <span class="term-en">Return of Spontaneous Circulation</span>
+              <span class="term-ko">자발순환회복</span>
+            </span>
+          </li>
+          <li>상황 인지·우선 처치·재평가: 의사 처방 및 병원 지침 확인 후 입력 예정</li>
         </ul>
       </div>
     </div>
@@ -235,14 +276,25 @@
   </div>
 
   <div class="scenario-card cheat-card" id="cheat-svt">
-    <h3>Stable SVT</h3>
+    <h3 class="term-heading">
+      <span class="term-stack">
+        <span class="term-abbr">SVT</span>
+        <span class="term-en">Supraventricular Tachycardia</span>
+        <span class="term-ko">상심실성 빈맥</span>
+      </span>
+    </h3>
     <div class="cheat-grid">
       <div class="cheat-box">
         <h4>사용 약물</h4>
         <div class="drug-badges">
           <div class="drug-badge-item">
             <span class="code-badge code-badge--primary">MADEN</span>
-            <span class="drug-badge-name">Adenosine</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Adenosine</span>
+                <span class="term-ko">아데노신</span>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -257,15 +309,23 @@
         <h4>간호 핵심</h4>
         <ul class="cheat-list">
           <li>빠른 IV push</li>
-          <li>Flush</li>
+          <li>NS 20 mL Flush</li>
         </ul>
       </div>
       <div class="cheat-box">
         <h4>모니터링</h4>
         <ul class="cheat-list">
-          <li>ECG</li>
-          <li>HR</li>
-          <li>상황 인지·우선 처치·재평가: 병원 프로토콜 확인 후 입력 예정</li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">ECG</span>
+            </span>
+          </li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">HR</span>
+            </span>
+          </li>
+          <li>상황 인지·우선 처치·재평가: 의사 처방 및 병원 지침 확인 후 입력 예정</li>
         </ul>
       </div>
     </div>
@@ -273,18 +333,34 @@
   </div>
 
   <div class="scenario-card cheat-card" id="cheat-hyperkalemia">
-    <h3>Hyperkalemia + ECG 변화</h3>
+    <h3 class="term-heading">
+      <span class="term-stack">
+        <span class="term-abbr">Hyperkalemia</span>
+        <span class="term-en">Hyperkalemia</span>
+        <span class="term-ko">고칼륨혈증</span>
+      </span>
+    </h3>
     <div class="cheat-grid">
       <div class="cheat-box">
         <h4>사용 약물</h4>
         <div class="drug-badges">
           <div class="drug-badge-item">
             <span class="code-badge code-badge--primary">MCAGLU</span>
-            <span class="drug-badge-name">Calcium Gluconate</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Calcium Gluconate</span>
+                <span class="term-ko">글루콘산칼슘</span>
+              </span>
+            </span>
           </div>
           <div class="drug-badge-item">
             <span class="code-badge code-badge--secondary">MBIVON</span>
-            <span class="drug-badge-name">Sodium Bicarbonate</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Sodium Bicarbonate</span>
+                <span class="term-ko">탄산수소나트륨</span>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -306,9 +382,13 @@
       <div class="cheat-box">
         <h4>모니터링</h4>
         <ul class="cheat-list">
-          <li>ECG</li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">ECG</span>
+            </span>
+          </li>
           <li>K 재검</li>
-          <li>상황 인지·우선 처치·재평가: 병원 프로토콜 확인 후 입력 예정</li>
+          <li>상황 인지·우선 처치·재평가: 의사 처방 및 병원 지침 확인 후 입력 예정</li>
         </ul>
       </div>
     </div>
@@ -316,22 +396,43 @@
   </div>
 
   <div class="scenario-card cheat-card" id="cheat-shock">
-    <h3>Septic Shock / Severe Hypotension</h3>
+    <h3 class="term-heading">
+      <span class="term-stack">
+        <span class="term-abbr">Septic Shock</span>
+        <span class="term-en">Septic Shock / Severe Hypotension</span>
+        <span class="term-ko">패혈성 쇼크 / 중증 저혈압</span>
+      </span>
+    </h3>
     <div class="cheat-grid">
       <div class="cheat-box">
         <h4>사용 약물</h4>
         <div class="drug-badges">
           <div class="drug-badge-item">
             <span class="code-badge code-badge--primary">MLEVO</span>
-            <span class="drug-badge-name">Norepinephrine</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Norepinephrine</span>
+                <span class="term-ko">노르에피네프린</span>
+              </span>
+            </span>
           </div>
           <div class="drug-badge-item">
             <span class="code-badge code-badge--secondary">M8DOPAM</span>
-            <span class="drug-badge-name">Dopamine Premix M8 (400mg)</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Dopamine Premix M8</span>
+                <span class="term-ko">도파민 프리믹스 (400mg)</span>
+              </span>
+            </span>
           </div>
           <div class="drug-badge-item">
             <span class="code-badge code-badge--secondary">M16DOPAM</span>
-            <span class="drug-badge-name">Dopamine Premix M16 (800mg)</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Dopamine Premix M16</span>
+                <span class="term-ko">도파민 프리믹스 (800mg)</span>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -352,9 +453,19 @@
       <div class="cheat-box">
         <h4>모니터링</h4>
         <ul class="cheat-list">
-          <li>MAP</li>
-          <li>BP</li>
-          <li>상황 인지·우선 처치·재평가: 병원 프로토콜 확인 후 입력 예정</li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">MAP</span>
+              <span class="term-en">Mean Arterial Pressure</span>
+              <span class="term-ko">평균동맥압</span>
+            </span>
+          </li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">BP</span>
+            </span>
+          </li>
+          <li>상황 인지·우선 처치·재평가: 의사 처방 및 병원 지침 확인 후 입력 예정</li>
         </ul>
       </div>
     </div>
@@ -362,18 +473,34 @@
   </div>
 
   <div class="scenario-card cheat-card" id="cheat-bradycardia">
-    <h3>Bradycardia + Hypotension</h3>
+    <h3 class="term-heading">
+      <span class="term-stack">
+        <span class="term-abbr">Bradycardia</span>
+        <span class="term-en">Bradycardia + Hypotension</span>
+        <span class="term-ko">서맥 + 저혈압</span>
+      </span>
+    </h3>
     <div class="cheat-grid">
       <div class="cheat-box">
         <h4>사용 약물</h4>
         <div class="drug-badges">
           <div class="drug-badge-item">
             <span class="code-badge code-badge--primary">MAT</span>
-            <span class="drug-badge-name">Atropine</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Atropine</span>
+                <span class="term-ko">아트로핀</span>
+              </span>
+            </span>
           </div>
           <div class="drug-badge-item">
             <span class="code-badge code-badge--secondary">MDOPA</span>
-            <span class="drug-badge-name">Dopamine</span>
+            <span class="drug-badge-name">
+              <span class="term-stack term-stack--compact">
+                <span class="term-abbr">Dopamine</span>
+                <span class="term-ko">도파민</span>
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -395,9 +522,17 @@
       <div class="cheat-box">
         <h4>모니터링</h4>
         <ul class="cheat-list">
-          <li>HR</li>
-          <li>BP</li>
-          <li>상황 인지·우선 처치·재평가: 병원 프로토콜 확인 후 입력 예정</li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">HR</span>
+            </span>
+          </li>
+          <li>
+            <span class="term-stack term-stack--compact">
+              <span class="term-abbr">BP</span>
+            </span>
+          </li>
+          <li>상황 인지·우선 처치·재평가: 의사 처방 및 병원 지침 확인 후 입력 예정</li>
         </ul>
       </div>
     </div>
@@ -436,7 +571,7 @@
 
   <div class="ecart-dept-summary" id="ecartDeptSummary"></div>
   <div class="ecart-drug-grid" id="ecartDrugGrid"></div>
-  <p class="protocol-note ecart-note">※ 대전보훈병원 심폐소생술 관리규정 별첨4(응급카트 약품목록) 기준입니다. 실제 투여 시 최신 프로토콜·처방을 확인하세요.</p>
+  <p class="protocol-note ecart-note">※ 대전보훈병원 심폐소생술 관리규정 별첨4(응급카트 약품목록) 기준입니다. 실제 투여 시 최신 의사 처방·병원 지침을 확인하세요.</p>
 </section>
 
 

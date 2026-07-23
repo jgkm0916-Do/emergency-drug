@@ -512,6 +512,10 @@ button {
   font-family: var(--font);
 }
 
+.glossary-popover--simple {
+  padding: 10px 12px;
+}
+
 .glossary-popover.hidden {
   display: none !important;
 }
@@ -526,6 +530,13 @@ button {
   border-bottom: 1px solid var(--border);
 }
 
+.glossary-popover-head--simple {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  gap: 2px 6px;
+}
+
 .glossary-popover-title {
   font-size: 14px;
   font-weight: 800;
@@ -538,6 +549,9 @@ button {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-sub);
+  line-height: 1.4;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .glossary-popover-close {
@@ -1619,6 +1633,35 @@ button {
   font-weight: 700;
 }
 
+.pocket-when-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.pocket-when-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+  line-height: 1.35;
+}
+
+.pocket-when-ko,
+.pocket-when-detail {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-sub);
+  line-height: 1.35;
+}
+
+.pocket-when-detail {
+  font-size: 11.5px;
+}
+
 .pocket-check-list,
 .pocket-caution-list {
   list-style: none;
@@ -2492,6 +2535,99 @@ button {
   border-bottom: 1px solid var(--border);
 }
 
+.scenario-card.cheat-card h3.term-heading {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* ——— Clinical term stack: abbr → EN → KO ——— */
+.term-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  line-height: 1.25;
+}
+
+.term-abbr {
+  display: block;
+  font-size: 1em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--navy);
+}
+
+.term-en,
+.term-ko {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-sub);
+}
+
+.term-ko {
+  font-size: 12.5px;
+}
+
+.term-stack--compact .term-abbr {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.term-stack--compact .term-en,
+.term-stack--compact .term-ko {
+  font-size: 11px;
+}
+
+.term-note {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.case-rhythm {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  border: 1px solid #BFDBFE;
+}
+
+.case-rhythm.hidden {
+  display: none !important;
+}
+
+.case-rhythm-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+}
+
+.tile-title .term-stack {
+  gap: 1px;
+}
+
+.tile-title .term-abbr {
+  font-size: 15px;
+}
+
+.tile-title .term-en,
+.tile-title .term-ko {
+  font-size: 11px;
+}
+
+.tnt-title .term-stack,
+.pocket-card h3 .term-stack {
+  gap: 2px;
+}
+
+.drug-badge-name .term-stack {
+  gap: 1px;
+}
+
 .cheat-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3240,7 +3376,11 @@ footer.site-footer {
 
 
 .case-rhythm {
-  margin: 0 0 10px;
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  border: 1px solid #BFDBFE;
   font-size: 14px;
   font-weight: 600;
   color: var(--subtext);
@@ -3248,5 +3388,5 @@ footer.site-footer {
 }
 
 .case-rhythm.hidden {
-  display: none;
+  display: none !important;
 }

@@ -65,7 +65,7 @@ var NURSING_TIPS = [
       "ECG·BP 모니터링 준비"
     ],
     during: [
-      "프로토콜 용량·속도로 투여",
+      "의사 처방 용량·속도로 투여",
       "ECG monitoring",
       "BP 확인",
       "Infusion 전환 시 속도 재확인"
@@ -114,7 +114,7 @@ var NURSING_TIPS = [
       "IV 확보"
     ],
     during: [
-      "프로토콜에 따른 IV 투여",
+      "의사 처방에 따른 IV 투여",
       "투여 후 재평가",
       "다른 약물과의 상호작용·라인 확인"
     ],

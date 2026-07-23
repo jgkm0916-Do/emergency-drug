@@ -86,13 +86,20 @@ function tipRelatedHtml(related) {
     .map(function (chip) {
       var action = chip.action || "study";
       var id = chip.id || "";
+      var labelHtml =
+        typeof formatTermAwareText === "function"
+          ? formatTermAwareText(chip.label || "", {
+              compact: true,
+              inlineLinkify: false
+            })
+          : escapeHtml(chip.label || "");
       return (
         '<button type="button" class="tnt-chip" onclick="openNursingTipLink(\'' +
         escapeHtml(action) +
         "', '" +
         escapeHtml(id) +
         "')\">" +
-        escapeHtml(chip.label || "") +
+        labelHtml +
         "</button>"
       );
     })
@@ -114,7 +121,9 @@ function renderNursingTipCard(tip) {
     "<div>" +
     '<p class="tnt-eyebrow">Today\'s Nursing Tip</p>' +
     '<h3 class="tnt-title">' +
-    escapeHtml(tip.title || "") +
+    (typeof formatTermAwareText === "function"
+      ? formatTermAwareText(tip.title || "", { inlineLinkify: false })
+      : escapeHtml(tip.title || "")) +
     "</h3>" +
     (tip.code
       ? '<p class="tnt-code">' + escapeHtml(tip.code) + "</p>"
@@ -469,7 +478,15 @@ function buildCategoryCard(meta, progress, onClick, toneClass) {
 
   var title = document.createElement("span");
   title.className = "tile-title";
-  title.textContent = meta.shortTitle || meta.title;
+  if (meta.titleTerm && typeof termStackHtml === "function") {
+    title.innerHTML = termStackHtml(meta.titleTerm);
+  } else if (typeof formatTermAwareText === "function") {
+    title.innerHTML = formatTermAwareText(meta.shortTitle || meta.title || "", {
+      inlineLinkify: false
+    });
+  } else {
+    title.textContent = meta.shortTitle || meta.title;
+  }
 
   var sub = document.createElement("span");
   sub.className = "tile-sub";
@@ -658,10 +675,20 @@ function loadQuestion() {
   var rhythmEl = document.getElementById("caseRhythm");
   if (rhythmEl) {
     if (scenario.rhythm) {
-      rhythmEl.textContent = "확인된 리듬: " + scenario.rhythm;
+      var rhythmTerm =
+        typeof lookupClinicalTerm === "function"
+          ? lookupClinicalTerm(scenario.rhythm)
+          : null;
+      if (rhythmTerm && typeof termStackHtml === "function") {
+        rhythmEl.innerHTML =
+          '<span class="case-rhythm-label">확인된 리듬</span>' +
+          termStackHtml(rhythmTerm);
+      } else {
+        rhythmEl.textContent = "확인된 리듬: " + scenario.rhythm;
+      }
       rhythmEl.classList.remove("hidden");
     } else {
-      rhythmEl.textContent = "";
+      rhythmEl.innerHTML = "";
       rhythmEl.classList.add("hidden");
     }
   }
@@ -979,7 +1006,50 @@ function listBullets(items, className) {
     '">' +
     (items || [])
       .map(function (item) {
-        return "<li>" + escapeHtml(item) + "</li>";
+        return (
+          "<li>" +
+          (typeof formatTermAwareText === "function"
+            ? formatTermAwareText(item)
+            : escapeHtml(item)) +
+          "</li>"
+        );
+      })
+      .join("") +
+    "</ul>"
+  );
+}
+
+function whenListHtml(items) {
+  return (
+    '<ul class="pocket-list pocket-when-list">' +
+    (items || [])
+      .map(function (item) {
+        if (item && typeof item === "object") {
+          var html = '<li class="pocket-when-item">';
+          html +=
+            '<span class="pocket-when-title">' +
+            escapeHtml(item.title || "") +
+            "</span>";
+          if (item.ko) {
+            html +=
+              '<span class="pocket-when-ko">' + escapeHtml(item.ko) + "</span>";
+          }
+          if (item.detail) {
+            html +=
+              '<span class="pocket-when-detail">' +
+              escapeHtml(item.detail) +
+              "</span>";
+          }
+          html += "</li>";
+          return html;
+        }
+        return (
+          "<li>" +
+          (typeof formatTermAwareText === "function"
+            ? formatTermAwareText(item)
+            : escapeHtml(item)) +
+          "</li>"
+        );
       })
       .join("") +
     "</ul>"
@@ -993,7 +1063,9 @@ function checklistHtml(items) {
       .map(function (item) {
         return (
           '<li><span class="pocket-check" aria-hidden="true">✓</span>' +
-          escapeHtml(item) +
+          (typeof formatTermAwareText === "function"
+            ? formatTermAwareText(item)
+            : escapeHtml(item)) +
           "</li>"
         );
       })
@@ -1147,7 +1219,7 @@ function mixCardHtml(mix) {
   }
   if (mix.hospital === false) {
     html +=
-      '<p class="pocket-mix-badge">일반 권장 기준 · 병원 프로토콜 우선</p>';
+      '<p class="pocket-mix-badge">일반 권장 기준 · 병원 지침 우선</p>';
   } else if (mix.hospital) {
     html +=
       '<p class="pocket-mix-badge pocket-mix-badge--hospital">병원 기준</p>';
@@ -1161,7 +1233,7 @@ function hospitalPracticeHtml(studyId) {
       ? HOSPITAL_TIPS[studyId]
       : null;
   if (!tip) {
-    return '<p class="pocket-empty">병원 실무 TIP 준비 중 · 프로토콜 확인</p>';
+    return '<p class="pocket-empty">병원 실무 TIP 준비 중 · 의사 처방 및 병원 지침 확인</p>';
   }
 
   var html =
@@ -1276,14 +1348,16 @@ function renderPocketDrugCard(drug) {
     imgs +
     "</div>" +
     "<h3>" +
-    escapeHtml(drug.title) +
+    (typeof formatTermAwareText === "function"
+      ? formatTermAwareText(drug.title, { inlineLinkify: false })
+      : escapeHtml(drug.title)) +
     "</h3>" +
     '<p class="drug-code">병원코드: ' +
     escapeHtml(drug.code) +
     "</p>" +
     '<section class="pocket-block">' +
-    '<h4 class="pocket-block-title">📌 언제 사용하는 약인가?</h4>' +
-    listBullets(drug.when, "pocket-list") +
+    '<h4 class="pocket-block-title">📌 주요 사용 상황</h4>' +
+    whenListHtml(drug.when) +
     "</section>" +
     '<section class="pocket-block">' +
     '<h4 class="pocket-block-title">🎯 목적</h4>' +

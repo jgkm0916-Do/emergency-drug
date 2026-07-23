@@ -1,5 +1,5 @@
 /* 병원 실무 TIP — Pocket Guide Accordion용 (암기 카드)
- * studyId 키. 프로토콜 변경 시 이 파일만 수정.
+ * studyId 키. 병원 실무 지침 변경 시 이 파일만 수정.
  *
  * Schema:
  * {
@@ -61,7 +61,7 @@ var HOSPITAL_TIPS = {
   bicarbonate: {
     rememberFirst: "산증이 동반될 때 고려하며, 무조건 투여하지 않는다.",
     wrong: "심정지면 무조건 Bicarb",
-    right: "적응증·ABGA 확인 후 프로토콜 투여",
+    right: "적응증·ABGA 확인 후 의사 처방에 따른 투여",
     educatorTip: "먼저 ‘왜 주는가’를 확인한다."
   },
   dopamine: {

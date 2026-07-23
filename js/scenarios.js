@@ -8,7 +8,7 @@
  * - "정답 암기"가 아니라 "왜 그렇게 판단하는가"를 훈련한다.
  * - 모든 선택지는 실제 임상에서 고려 가능한 행동으로 작성한다.
  * - 차이는 "지금 이 환자에게 가장 적절/시급한 우선순위"에서 갈린다.
- * - 병원 프로토콜(희석/혼합/병원 규정)은 다루지 않는다(Drug Library·E-cart에서 제공).
+ * - 병원 지침(희석/혼합/병원 규정)은 다루지 않는다(Drug Library·E-cart에서 제공).
  * - 난이도: basic 3 STEP / intermediate 4 STEP / advanced 5 STEP.
  *
  * case = { id, caseLabel, title, difficulty, rhythm, text, hr, bp, spo2,
@@ -31,6 +31,11 @@ var CATEGORY_META = [
     id: "cardiacArrest",
     title: "Cardiac Arrest / CPR",
     shortTitle: "Cardiac Arrest",
+    titleTerm: {
+      abbr: "CPR",
+      en: "CPR",
+      ko: ""
+    },
     description: "심정지 상황에서 임상 판단 훈련",
     icon: "heart"
   },
@@ -38,6 +43,11 @@ var CATEGORY_META = [
     id: "svt",
     title: "Tachyarrhythmia / SVT",
     shortTitle: "Tachyarrhythmia / SVT",
+    titleTerm: {
+      abbr: "SVT",
+      en: "Supraventricular Tachycardia",
+      ko: "상심실성 빈맥"
+    },
     description: "안정·불안정 빈맥에서 판단 훈련",
     icon: "zap"
   },
@@ -45,6 +55,11 @@ var CATEGORY_META = [
     id: "bradycardia",
     title: "Bradycardia",
     shortTitle: "Bradycardia",
+    titleTerm: {
+      abbr: "Bradycardia",
+      en: "Bradycardia",
+      ko: "서맥"
+    },
     description: "증상성 서맥·저관류 판단 훈련",
     icon: "activity"
   },
@@ -52,6 +67,11 @@ var CATEGORY_META = [
     id: "shock",
     title: "Shock / Hypotension",
     shortTitle: "Shock / Hypotension",
+    titleTerm: {
+      abbr: "Shock / Hypotension",
+      en: "Shock / Hypotension",
+      ko: "쇼크 / 저혈압"
+    },
     description: "쇼크·저혈압 순환 판단 훈련",
     icon: "droplet"
   },
@@ -59,6 +79,11 @@ var CATEGORY_META = [
     id: "hyperkalemia",
     title: "Hyperkalemia",
     shortTitle: "Hyperkalemia",
+    titleTerm: {
+      abbr: "Hyperkalemia",
+      en: "Hyperkalemia",
+      ko: "고칼륨혈증"
+    },
     description: "고칼륨혈증 심독성 판단 훈련",
     icon: "flask"
   }
