@@ -37,9 +37,6 @@ var QUIZ_ICONS = {
  * Schema: { id, studyId, title, code, before[], during[], after[], mistake, memory, related[] }
  */
 var _lastNursingTipId = null;
-var studyOrigin = null;
-var _studyOriginFromOpen = false;
-var ecartScrollPosition = null;
 
 function escapeHtml(str) {
   return String(str)
@@ -179,44 +176,7 @@ function renderClinicalPearls() {
   mount.innerHTML = tip ? renderNursingTipCard(tip) : "";
 }
 
-function syncStudyBackButton() {
-  var btn = document.getElementById("studyBackToEcart");
-  if (!btn) return;
-  if (studyOrigin === "ecart" && currentAppTab === "study") {
-    btn.classList.remove("hidden");
-  } else {
-    btn.classList.add("hidden");
-  }
-}
-
-function returnToEcartFromStudy() {
-  studyOrigin = null;
-  _studyOriginFromOpen = false;
-  syncStudyBackButton();
-
-  var savedScroll = ecartScrollPosition;
-  showTab("ecart");
-
-  if (savedScroll == null) return;
-
-  window.requestAnimationFrame(function () {
-    window.requestAnimationFrame(function () {
-      window.scrollTo(0, savedScroll);
-      ecartScrollPosition = null;
-    });
-  });
-}
-
-function openStudyDrug(studyId, origin) {
-  studyOrigin = origin || null;
-  _studyOriginFromOpen = true;
-
-  if (origin === "ecart") {
-    ecartScrollPosition = window.scrollY || window.pageYOffset || 0;
-  } else {
-    ecartScrollPosition = null;
-  }
-
+function openStudyDrug(studyId) {
   showTab("study");
   var delay = prefersReducedMotion() ? 0 : 120;
   window.setTimeout(function () {
@@ -589,29 +549,22 @@ function restartGame() {
 
 /* ---------- question flow ---------- */
 function formatFeedback(step, isCorrect) {
-  var linkify =
-    typeof linkifyGlossaryTerms === "function"
-      ? linkifyGlossaryTerms
-      : function (t) {
-          return t;
-        };
   var html = "";
   if (isCorrect) {
-    html += "<strong>정답</strong><br>" + linkify(step.correct);
+    html += "<strong>정답</strong><br>" + step.correct;
   } else {
     html +=
       "<strong>다시 확인</strong><br>" +
-      linkify(step.wrong) +
+      step.wrong +
       "<br><br>정답: <strong>" +
-      linkify(step.answer) +
+      step.answer +
       "</strong>";
   }
   if (step.rationale) {
-    html += "<br><br><strong>근거</strong><br>" + linkify(step.rationale);
+    html += "<br><br><strong>근거</strong><br>" + step.rationale;
   }
   if (step.learningPoint) {
-    html +=
-      "<br><br><strong>학습 포인트</strong><br>" + linkify(step.learningPoint);
+    html += "<br><br><strong>학습 포인트</strong><br>" + step.learningPoint;
   }
   return html;
 }
@@ -678,8 +631,7 @@ function loadQuestion() {
   optionsBox.classList.remove("is-answered");
   optionsBox.innerHTML = "";
 
-  var shuffledOptions = shuffleArray(step.options);
-  shuffledOptions.forEach(function (option) {
+  step.options.forEach(function (option) {
     var btn = document.createElement("button");
     btn.className = "option-btn";
     btn.innerText = option;
@@ -692,7 +644,6 @@ function loadQuestion() {
   var resultBox = document.getElementById("resultBox");
   resultBox.style.display = "none";
   resultBox.className = "result";
-  if (typeof hideGlossaryPopover === "function") hideGlossaryPopover();
 
   var nextBtn = document.getElementById("nextBtn");
   nextBtn.classList.add("hidden");
@@ -762,9 +713,6 @@ function nextQuestion() {
   /* CASE 완료 */
   if (scenario.id) {
     completedCaseIdsThisSession.push(scenario.id);
-    if (currentMode && currentMode.type === "category") {
-      markCasesCompleted(currentMode.categoryId, [scenario.id]);
-    }
   }
 
   currentScenarioIndex++;
@@ -884,14 +832,6 @@ function showTab(tab) {
 
   currentAppTab = tab;
   updateBottomNav(tab);
-
-  if (tab === "study") {
-    if (!_studyOriginFromOpen) {
-      studyOrigin = null;
-    }
-    _studyOriginFromOpen = false;
-  }
-  syncStudyBackButton();
 
   if (tab === "ecart") {
     if (typeof initEcartScreen === "function") initEcartScreen();
