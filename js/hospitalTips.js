@@ -37,9 +37,26 @@ var HOSPITAL_TIPS = {
   },
   amiodarone: {
     rememberFirst:
-      "AFib 우리 병원: ① MCDR 1@ + MNS100B (10min) → ② MCDR 6@ + MNSB (24hr)",
-    right: "Infusion 24hr: 6hr — 66cc/hr → 18hr — 33cc/hr",
-    educatorTip: "Loading(10min) 후 구간별 rate(66 → 33)를 반드시 확인한다."
+      "AFib 우리 병원: ① MCDR 1@+MNS100B(10min) → ② MCDR 6@+NS1L(24hr)",
+    right: [
+      {
+        label: "Maintenance dose 주입 속도",
+        value: "360mg/6hr → 540mg/18hr",
+        emphasize: false
+      },
+      {
+        label: "6hr 구간",
+        value: "360mg ÷ 0.9mg/mL = 66.7cc/hr → 약 67cc/hr",
+        emphasize: true
+      },
+      {
+        label: "18hr 구간",
+        value: "540mg ÷ 0.9mg/mL = 33.3cc/hr → 약 33cc/hr",
+        emphasize: true
+      }
+    ],
+    educatorTip:
+      "Loading(10min) 후 구간별 rate(약 67 → 약 33)를 반드시 확인한다. IV 종료 후 코다론정(DCDR) 경구 전환도 잊지 말 것."
   },
   bicarbonate: {
     rememberFirst: "산증이 동반될 때 고려하며, 무조건 투여하지 않는다.",

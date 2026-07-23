@@ -79,13 +79,13 @@ var POCKET_GUIDE_DRUGS = [
       form: "150mg/3ml/Amp (MCDR)",
       groups: [
         {
-          title: "AFib · 우리 병원 프로토콜",
-          subtitle: "의사 지정 투여 순서",
+          title: "AFib · 병동 실무 세팅",
+          subtitle: "본원 IMC 처방 기준",
           tone: "afib",
           lines: [
-            { label: "① Loading", value: "MCDR 1@ + MNS100B (10min)" },
-            { label: "② Infusion", value: "MCDR 6@ + MNSB (24hr)" },
-            { label: "24hr rate", value: "6hr 66cc/hr → 18hr 33cc/hr" }
+            { label: "Loading dose", value: "MCDR 1@ + MNS100B (10min)" },
+            { label: "Maintenance dose", value: "MCDR 6@(900mg) + NS 1L (24hr)" },
+            { label: "IV→PO 전환", value: "24hr 종료 후 코다론정(DCDR) 1T 복용 시작" }
           ]
         },
         {
@@ -98,9 +98,16 @@ var POCKET_GUIDE_DRUGS = [
           ]
         }
       ],
-      note: "적응증에 맞는 구간만 확인하세요. AFib ≠ VF/VT"
+      note: "적응증에 맞는 구간만 확인하세요. AFib ≠ VF/VT. 위 세팅값은 병동 관행값으로, 처방 mg과 환자 상태에 따라 반드시 재계산·재확인하세요."
     },
-    cautions: ["QT prolongation", "Hypotension", "Bradycardia", "24h 총량 2.2g 초과 주의"],
+    cautions: [
+      "QT prolongation",
+      "Hypotension",
+      "Bradycardia",
+      "24h 총량 2.2g 초과 주의",
+      "세팅값은 편의상 반올림된 값 — 처방 mg 기준으로 반드시 재확인",
+      "IV 24hr 종료 후 코다론정(DCDR) 경구 전환 스케줄 확인"
+    ],
     pediatric: ["병원 프로토콜·체중 기반 투여 확인"],
     pediatricSource: "hospital"
   },

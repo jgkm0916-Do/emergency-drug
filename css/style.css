@@ -1951,6 +1951,24 @@ button {
   font-weight: 700;
   color: var(--navy);
   letter-spacing: -0.02em;
+  line-height: 1.45;
+}
+
+.pocket-mix-val-emphasis {
+  font-weight: 800;
+}
+
+.hospital-practice-card .pocket-mix-grid {
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.hospital-practice-card .pocket-mix-row {
+  grid-template-columns: 72px 1fr;
+  background: #fff;
 }
 
 .pocket-mix-note {
@@ -2039,6 +2057,7 @@ button {
   line-height: 1.5;
   letter-spacing: -0.02em;
   color: var(--navy);
+  white-space: pre-line;
 }
 
 .hospital-practice-educator {

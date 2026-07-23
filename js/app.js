@@ -1021,18 +1021,32 @@ function cautionHtml(items) {
 function mixRowsHtml(lines) {
   return (lines || [])
     .map(function (row) {
+      var valHtml = escapeHtml(row.value);
+      if (row.emphasize) {
+        valHtml =
+          '<strong class="pocket-mix-val-emphasis">' + valHtml + "</strong>";
+      }
       return (
         '<div class="pocket-mix-row">' +
         '<span class="pocket-mix-key">' +
         escapeHtml(row.label) +
         "</span>" +
         '<span class="pocket-mix-val">' +
-        escapeHtml(row.value) +
+        valHtml +
         "</span>" +
         "</div>"
       );
     })
     .join("");
+}
+
+function hospitalRightBodyHtml(right) {
+  if (Array.isArray(right)) {
+    return '<div class="pocket-mix-grid">' + mixRowsHtml(right) + "</div>";
+  }
+  return (
+    '<p class="hospital-practice-text">' + escapeHtml(right || "") + "</p>"
+  );
 }
 
 function mixCardHtml(mix) {
@@ -1172,18 +1186,14 @@ function hospitalPracticeHtml(studyId) {
       '<p class="hospital-practice-arrow" aria-hidden="true">↓</p>' +
       '<div class="hospital-practice-card hospital-practice-card--right">' +
       '<p class="hospital-practice-label">⭕ 올바른 계산</p>' +
-      '<p class="hospital-practice-text">' +
-      escapeHtml(tip.right || "") +
-      "</p>" +
+      hospitalRightBodyHtml(tip.right) +
       "</div>" +
       "</div>";
   } else if (tip.right) {
     html +=
       '<div class="hospital-practice-card hospital-practice-card--right">' +
-      '<p class="hospital-practice-label">⭕ 우리 병원 rate</p>' +
-      '<p class="hospital-practice-text">' +
-      escapeHtml(tip.right) +
-      "</p>" +
+      '<p class="hospital-practice-label">⭕ 계산 방법</p>' +
+      hospitalRightBodyHtml(tip.right) +
       "</div>";
   }
 
